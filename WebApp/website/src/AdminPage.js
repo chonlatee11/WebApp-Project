@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react'
 import axios from 'axios'
+import Sidebar from './Sidebar'
 
 function DashboardAdmin(){
     useEffect(() => {
@@ -20,8 +21,11 @@ function DashboardAdmin(){
         })
      }, [])
 
-    return(
-    <h1>ADMIN PAGE</h1>
+     return(
+        <>
+        <h1>TEST</h1>
+        <Sidebar/>
+        </>
     )
 }
 
