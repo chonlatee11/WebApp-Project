@@ -23,7 +23,7 @@ const Sidebar = ({children}) => {
           icon:<FaRegChartBar/>
         },
         {
-          path:"/HistoryEDIT",
+          path:"/History",
           name:"ประวัติการแก้ไขข้อมูล",
           icon:<FaCommentAlt/>
         },

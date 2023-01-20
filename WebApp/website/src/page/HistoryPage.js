@@ -1,13 +1,13 @@
 import React from "react";
 import Sidebar from "../component/Sidebar";
 
-const ListSugarcane = () => {
+const History = () => {
     return(
         <>
-            <h1>hello Sugarcane</h1>
+            <h1>hello Research</h1>
             <Sidebar/>
         </>
     );
 };
 
-export default ListSugarcane;
+export default History;

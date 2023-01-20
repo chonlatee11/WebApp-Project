@@ -1,39 +1,102 @@
-var express = require('express')
-var cors = require('cors')
-var app = express()
-var bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
-const bcrypt = require('bcrypt');
-const saltRounds = 10
-var jwt = require('jsonwebtoken');
-const secret = 'LoginWeb'
+var express = require("express");
+var cors = require("cors");
+var app = express();
+var bodyParser = require("body-parser");
+var jsonParser = bodyParser.json();
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+var jwt = require("jsonwebtoken");
+const secret = "LoginWeb";
 
-
-app.use(cors())
+app.use(cors());
 
 var mysql = require("mysql");
 var poolCluster = mysql.createPoolCluster();
 poolCluster.add("node0", {
-   host: "localhost",
-   port: "3306",
-   database: "mymariaDB",
-   user: "devchon",
-   password: "devchon101",
-   charset: "utf8mb4",
+  host: "localhost",
+  port: "3306",
+  database: "mymariaDB",
+  user: "devchon",
+  password: "devchon101",
+  charset: "utf8mb4",
 });
 
 app.listen(3030, function () {
-  console.log('CORS-enabled web server listening on port 3030')
-})
+  console.log("CORS-enabled web server listening on port 3030");
+});
 
+app.post("/loginADMIN", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM Admin WHERE email = ?",
+        [req.body.email],
+        function (err, rows) {
+          if (err) {
+            console.log(err);
+          } else {
+            for (let index = 0; index < rows.length; index++) {
+              const element = rows[index];
+              bcrypt.compare(
+                req.body.password,
+                element.password,
+                function (err, result) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  if (result == true) {
+                    console.log("password match");
 
-app.post('/loginADMIN', jsonParser,  function (req, res, next) {
+                    //res.json({ status: "success" });
+
+                    // console.log(rows);
+
+                    // console.log(rows.length);
+
+                    // console.log(res.statusCode);
+                    var token = jwt.sign({ email: element.email}, secret, { expiresIn: '1h' });
+                    res.json({
+                      email: element.email,
+                      status: 'ok',
+                      token
+                    });
+
+                    connection.release();
+                  } else {
+                    console.log("password not match");
+
+                    // res.status==401;
+
+                    res.json({ data: "notmatch", status: 402 });
+
+                    connection.release();
+                  }
+                }
+              );
+            }
+          }
+
+          if (rows.length == 0 || rows == undefined) {
+            res.json({ data: "Not found", status: 401 });
+
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
+/* app.post('/loginADMIN', jsonParser,  function (req, res, next) {
+    console.log(req.body)
   poolCluster.getConnection(function (err, connection) {
     if (err) {
         console.log(err);
         }else {
             connection.query("SELECT * FROM Admin WHERE email = ?", 
-            [req.body.email], function (err, Admin, fields) {
+            [req.body.email], function (err, Admin) {
                 if (err) {
                     res.json({err})
                 } else {
@@ -53,48 +116,55 @@ app.post('/loginADMIN', jsonParser,  function (req, res, next) {
             });
         }
     });
-})
+}) */
 
-
-app.post('/loginRESEARCH', jsonParser,  function (req, res, next) {
+app.post("/loginRESEARCH", jsonParser, function (req, res, next) {
   poolCluster.getConnection(function (err, connection) {
     if (err) {
-        console.log(err);
-        }else {
-            connection.query("SELECT * FROM Researcher WHERE email = ?", 
-            [req.body.email, req.body.password], function (err, Admin) {
-                if (err) {
-                    res.json({err})
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM Researcher WHERE email = ?",
+        [req.body.email, req.body.password],
+        function (err, Admin) {
+          if (err) {
+            res.json({ err });
+          } else {
+            if (Admin.length == 0) {
+              res.json({ data: "Not found" });
+              connection.release();
+            }
+            bcrypt.compare(
+              req.body.password,
+              Admin[0].password,
+              function (err, isLogin) {
+                if (isLogin) {
+                  var token = jwt.sign({ email: Admin[0].email }, secret, {
+                    expiresIn: "1h",
+                  });
+                  res.json({ status: "ok", message: "login success", token });
                 } else {
-                    if (Admin.length == 0) {
-                    res.json({data: "Not found"})
-                    connection.release();
-                    }
-                    bcrypt.compare(req.body.password, Admin[0].password, function(err,isLogin) {
-                        if(isLogin){
-                            var token = jwt.sign({email: Admin[0].email}, secret, { expiresIn: '1h' });
-                            res.json({status:'ok',message: 'login success', token})
-                        } else {
-                            res.json({status:'error',message: 'login fail'})
-                        }
-                    });
+                  res.json({ status: "error", message: "login fail" });
                 }
-            });
+              }
+            );
+          }
         }
-    });
-})
-
-
-app.post('/authen', jsonParser,  function (req, res, next) {
-    try{
-        const token = req.headers.authorization.split(' ')[1]
-        console.log('token',token)
-        var decoded = jwt.verify(token, secret);
-        res.json({status: 'ok', decoded})
-    }catch(err){
-        res.json({status: 'error', maessage: err.message})
+      );
     }
-})
+  });
+});
+
+app.post("/authen", jsonParser, function (req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    console.log("token", token);
+    var decoded = jwt.verify(token, secret);
+    res.json({ status: "ok", decoded });
+  } catch (err) {
+    res.json({ status: "error", maessage: err.message });
+  }
+});
 
 // app.post('/login', jsonParser,  function (req, res, next) {
 //   poolCluster.getConnection(function (err, connection) {
@@ -151,7 +221,7 @@ app.post('/authen', jsonParser,  function (req, res, next) {
 //             if (err) {
 //               console.log(err);
 //             } else {
-//               connection.query("INSERT INTO Admin (name, email, password) VALUES (?,?,?);", 
+//               connection.query("INSERT INTO Admin (name, email, password) VALUES (?,?,?);",
 //             [req.body.name, req.body.email, hash], function (err, rows) {
 //                 if (err) {
 //               res.json({err})
@@ -171,7 +241,7 @@ app.post('/authen', jsonParser,  function (req, res, next) {
 //           if (err) {
 //             console.log(err);
 //           } else {
-//             connection.query("INSERT INTO Researcher (name, email, password, phonenumber) VALUES (?,?,?,?);", 
+//             connection.query("INSERT INTO Researcher (name, email, password, phonenumber) VALUES (?,?,?,?);",
 //           [req.body.name, req.body.email, hash, req.body.phonenumber], function (err, rows) {
 //               if (err) {
 //             res.json({err})

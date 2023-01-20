@@ -1,7 +1,8 @@
-import {useEffect} from 'react'
+import React,{useEffect} from 'react'
 import axios from 'axios'
+import Sidebar from './Sidebar'
 
-function AuthenAdmin(){
+const AuthenAdmin = () => {
     useEffect(() => {
         const token = localStorage.getItem('token')
         axios.post("http://localhost:3030/authen",{},{
@@ -11,7 +12,6 @@ function AuthenAdmin(){
         }).then((response) => {
             console.log(response.data.status)
             if(response.data.status === 'ok'){
-                alert('authen success')
             } else {
                 alert('authen fail')
                 window.location = '/'
@@ -19,6 +19,12 @@ function AuthenAdmin(){
             console.log(response.data)
         })
      }, [])
+
+return(
+    <>
+    <Sidebar/>
+    </>
+);
 }
 
 export default AuthenAdmin;

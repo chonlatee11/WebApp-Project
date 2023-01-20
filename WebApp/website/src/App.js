@@ -1,25 +1,39 @@
 import React from "react";
-import './App.css';
+import './css/App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Sidebar from "./component/Sidebar";
-import ListHistoryEDIT from "./page/HistoryEDIT";
 import ListADMIN from "./page/ListADMIN";
 import ListResearch from "./page/ListResearch";
 import ListSugarcane from "./page/ListSugarcane";
+import History from "./page/HistoryPage";
+import FormComponent from "./LOGIN";
+import AuthenAdmin from "./component/AuthenAdmin";
+
+const token = localStorage.getItem('token');
 
 const App = () => {
+    console.log(token)
+    console.log(token === undefined)
     return(
         <BrowserRouter>
-        <Sidebar>
-        <Routes> 
-            <Route path="/ListAdmin" element = {<ListADMIN/>}/>
-            <Route path="/ListResearch" element = {<ListResearch/>}/>
-            <Route path="/ListSugarcane" element = {<ListSugarcane/>}/>
-            <Route path="/ListHistory" element = {<ListHistoryEDIT/>}/>
-        </Routes>
-        </Sidebar>
+                <Routes> 
+                    
+                        
+                        <Route path="/AuthenAdmin" element = {<AuthenAdmin/>}/>
+                        <Route path="/ListADMIN" element = {<ListADMIN/>}/>
+                        <Route path="/ListResearch" element = {<ListResearch/>}/>
+                        <Route path="/ListSugarcane" element = {<ListSugarcane/>}/>
+                        <Route path="/History" element = {<History/>}/>
+                        <Route path="/" element = {<FormComponent/>}/>
+                    
+                    
+                         
+                    
+                    
+                </Routes>
         </BrowserRouter>
     )
 }
+
+
 
 export default App;

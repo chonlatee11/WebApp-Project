@@ -39,21 +39,20 @@ const bodypage = {
         if(email.includes("@")){
             setErrorEmail('')
             setEmailColor('green')
-            setValidForm(true)
+            //setValidForm(true)
         }else{
             setErrorEmail('อีเมลไม่ถูกต้อง')
             setEmailColor('red')
-            setValidForm(false)
         }
 
         if(password.length > 8){
             setErrorPassword('')
             setPasswordColor('green')
-            setValidForm(true)
+            //setValidForm(true)
         }else{
             setErrorPassword('รหัสผ่านไม่ถูกต้อง')
             setPasswordColor('red')
-            setValidForm(false)
+            //setValidForm(false)
         }
     }
 
@@ -76,6 +75,9 @@ const bodypage = {
                 alert('login success')
                 localStorage.setItem('token', response.data.token)
                 window.location = 'AuthenAdmin'
+                setEmail('')
+                setPassword('')
+                //setValidForm(false)
             } else {
                 alert('login fail')
                 console.log(response.data)
