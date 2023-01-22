@@ -11,20 +11,18 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { UseAuth } from "../context/AuthConext";
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const Auth = UseAuth();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      role: data.get("role")
-    });
+    Auth.login(data.get("email"), data.get("password"), data.get("role"));
   };
 
   return (
@@ -37,7 +35,7 @@ export default function SignIn() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            alignContent: "center"
+            alignContent: "center",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -73,7 +71,7 @@ export default function SignIn() {
               autoComplete="current-password"
             />
 
-            <FormControl>
+            <FormControl sx={{ marginLeft: 10 }}>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
