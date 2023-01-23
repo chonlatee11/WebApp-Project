@@ -4,7 +4,6 @@ var app = express();
 var bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
 var jwt = require("jsonwebtoken");
 const secret = "LoginWeb";
 
@@ -13,7 +12,7 @@ app.use(cors());
 var mysql = require("mysql");
 var poolCluster = mysql.createPoolCluster();
 poolCluster.add("node0", {
-  host: "localhost",
+  host: "192.168.1.22",
   port: "3306",
   database: "mymariaDB",
   user: "devchon",
@@ -85,6 +84,42 @@ app.post("/loginADMIN", jsonParser, function (req, res, next) {
           }
         }
       );
+    }
+  });
+});
+
+app.put("/AddAdmin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  const saltRounds = 10;
+  const myPlaintextPassword = req.body.password;
+  bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+    console.log(hash);
+    if (err) {
+      console.log(err);
+    } else {
+      poolCluster.getConnection(function (err, connection) {
+        if (err) {
+          console.log(err);
+        } else {
+          connection.query(
+            "INSERT INTO `Admin` (`Email`, `passWord`, `fName`, `lName`) VALUES ( ?, ?, ?, ?);",
+            [
+              req.body.email,
+              hash,
+              req.body.fname,
+              req.body.lname,
+            ],
+            function (err) {
+              if (err) {
+                res.json({ err });
+              } else {
+                res.json({ status: "success" });
+                connection.release();
+              }
+            }
+          );
+        }
+      });
     }
   });
 });
