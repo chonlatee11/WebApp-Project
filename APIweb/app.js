@@ -40,35 +40,40 @@ app.post("/loginADMIN", jsonParser, function (req, res, next) {
             for (let index = 0; index < rows.length; index++) {
               const element = rows[index];
               if (req.body.email == "admin" && req.body.password == "admin") {
-                var token = jwt.sign({ email: element.email}, secret, { expiresIn: '1h' });
-                console.log(element.Email)
-                res.json({ status: "AdminLogin",
-                token,
-                user: element.Email });
+                var token = jwt.sign({ email: element.email }, secret, {
+                  expiresIn: "1h",
+                });
+                console.log(element.Email);
+                res.json({
+                  status: "AdminLogin",
+                  token,
+                  email: element.Email,
+                });
                 connection.release();
-              }else{
+              } else {
                 bcrypt.compare(
                   req.body.password,
-                  element.password,
+                  element.passWord,
                   function (err, result) {
                     if (err) {
                       console.log(err);
                     }
                     if (result == true) {
                       console.log("password match");
-                      var token = jwt.sign({ email: element.Email}, secret, { expiresIn: '1h' });
+                      var token = jwt.sign({ email: element.Email }, secret, {
+                        expiresIn: "1h",
+                      });
                       res.json({
                         email: element.Email,
-                        status: 'ok',
-                        token
+                        status: "AdminLogin",
+                        token,
                       });
-  
+
                       connection.release();
                     } else {
                       console.log("password not match");
                       // res.status==401;
                       res.json({ data: "notmatch", status: 402 });
-  
                       connection.release();
                     }
                   }
@@ -103,12 +108,7 @@ app.put("/AddAdmin", jsonParser, function (req, res, next) {
         } else {
           connection.query(
             "INSERT INTO `Admin` (`Email`, `passWord`, `fName`, `lName`) VALUES ( ?, ?, ?, ?);",
-            [
-              req.body.email,
-              hash,
-              req.body.fname,
-              req.body.lname,
-            ],
+            [req.body.email, hash, req.body.fname, req.body.lname],
             function (err) {
               if (err) {
                 res.json({ err });
@@ -124,70 +124,68 @@ app.put("/AddAdmin", jsonParser, function (req, res, next) {
   });
 });
 
+app.delete("/deleteAdmin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "DELETE FROM `Admin` WHERE `Admin`.`Email` = ?",
+        [req.body.email],
+        function (err) {
+          if (err) {
+            res.json({ err });
+          } else {
+            console.log("delete success");
+            res.json({ status: "success" });
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
 
-// app.post("/loginRESEARCH", jsonParser, function (req, res, next) {
-//   poolCluster.getConnection(function (err, connection) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       connection.query(
-//         "SELECT * FROM Researcher WHERE email = ?",
-//         [req.body.email, req.body.password],
-//         function (err, Admin) {
-//           if (err) {
-//             res.json({ err });
-//           } else {
-//             if (Admin.length == 0) {
-//               res.json({ data: "Not found" });
-//               connection.release();
-//             }
-//             bcrypt.compare(
-//               req.body.password,
-//               Admin[0].password,
-//               function (err, isLogin) {
-//                 if (isLogin) {
-//                   var token = jwt.sign({ email: Admin[0].email }, secret, {
-//                     expiresIn: "1h",
-//                   });
-//                   res.json({ status: "ok", message: "login success", token });
-//                 } else {
-//                   res.json({ status: "error", message: "login fail" });
-//                 }
-//               }
-//             );
-//           }
-//         }
-//       );
-//     }
-//   });
-// });
+app.patch("/updateAdmin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  const saltRounds = 10;
+  const myPlaintextPassword = req.body.password;
+  bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+    console.log(hash);
+    if (err) {
+      console.log(err);
+    } else {
+      poolCluster.getConnection(function (err, connection) {
+        if (err) {
+          console.log(err);
+        } else {
+          connection.query(
+            "UPDATE `Admin` SET `fName` = ?, `lName` = ?, `Email` = ?, `passWord` = ?, `modifydate` = ? WHERE `Admin`.`Email` = ?",
+            [
+              req.body.fname,
+              req.body.lname,
+              req.body.emailupdate,
+              hash,
+              req.body.modifydate,
+              req.body.email,
+            ],
+            function (err) {
+              if (err) {
+                res.json({ err });
+              } else {
+                console.log("update success");
+                res.json({ status: "success" });
+                connection.release();
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+});
 
-// app.post("/authen", jsonParser, function (req, res, next) {
-//   try {
-//     const token = req.headers.authorization.split(" ")[1];
-//     console.log("token", token);
-//     var decoded = jwt.verify(token, secret);
-//     res.json({ status: "ok", decoded });
-//   } catch (err) {
-//     res.json({ status: "error", maessage: err.message });
-//   }
-// });
-
-// app.get("/getResearcher", function (req, res, next) {
-//   poolCluster.getConnection(function (err, connection) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       connection.query("SELECT * FROM Researcher", function (err, rows) {
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           res.json(rows);
-//         }
-//       });
-//     }
-//   });
-// });
 
 app.get("/getAdmin", jsonParser, function (req, res) {
   console.log(req.body);
@@ -214,6 +212,124 @@ app.get("/getAdmin", jsonParser, function (req, res) {
   });
 });
 
+app.put("/AddResearch", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  const saltRounds = 10;
+  const myPlaintextPassword = req.body.password;
+  bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+    console.log(hash);
+    if (err) {
+      console.log(err);
+    } else {
+      poolCluster.getConnection(function (err, connection) {
+        if (err) {
+          console.log(err);
+        } else {
+          connection.query(
+            "INSERT INTO `Researcher` (`Email`, `passWord`, `fName`, `lName`, `phoneNumber`) VALUES ( ?, ?, ?, ?, ?);",
+            [req.body.email, hash, req.body.fname, req.body.lname],
+            function (err) {
+              if (err) {
+                res.json({ err });
+              } else {
+                res.json({ status: "success" });
+                connection.release();
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+});
+
+app.delete("/deleteAdmin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "DELETE FROM `Admin` WHERE `Admin`.`Email` = ?",
+        [req.body.email],
+        function (err) {
+          if (err) {
+            res.json({ err });
+          } else {
+            console.log("delete success");
+            res.json({ status: "success" });
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
+
+app.patch("/updateAdmin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  const saltRounds = 10;
+  const myPlaintextPassword = req.body.password;
+  bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+    console.log(hash);
+    if (err) {
+      console.log(err);
+    } else {
+      poolCluster.getConnection(function (err, connection) {
+        if (err) {
+          console.log(err);
+        } else {
+          connection.query(
+            "UPDATE `Admin` SET `fName` = ?, `lName` = ?, `Email` = ?, `passWord` = ?, `modifydate` = ? WHERE `Admin`.`Email` = ?",
+            [
+              req.body.fname,
+              req.body.lname,
+              req.body.emailupdate,
+              hash,
+              req.body.modifydate,
+              req.body.email,
+            ],
+            function (err) {
+              if (err) {
+                res.json({ err });
+              } else {
+                console.log("update success");
+                res.json({ status: "success" });
+                connection.release();
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+});
+
+
+app.get("/getAdmin", jsonParser, function (req, res) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM Admin",
+        [req.body.userID],
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+            connection.release();
+          } else {
+            console.log(data.length);
+            res.json({ data });
+            // connection.end();
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
 
 // app.post('/login', (req, res) => {
 //     const email = req.body.email;

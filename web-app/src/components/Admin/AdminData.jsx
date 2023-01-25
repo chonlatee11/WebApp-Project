@@ -16,11 +16,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Alert from '@mui/material/Alert';
-
+import Alert from "@mui/material/Alert";
+import Slide from '@mui/material/Slide';
 
 const baseUrl = "http://192.168.1.22:3031/getAdmin";
 const baseUrlAdd = "http://192.168.1.22:3031/AddAdmin";
+const baseUrlupdate = "http://192.168.1.22:3031/updateAdmin";
+const baseUrlDelete = "http://192.168.1.22:3031/deleteAdmin";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,12 +51,74 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AdminData = () => {
-  
   const [adminData, setAdminData] = React.useState([]);
   const [openAddAdminDialog, setOpenAddAdminDialog] = React.useState(false);
   const [openUpDateDelet, setOpenUpDateDelete] = React.useState(false);
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
+  const [conFirmDelete, setConfirmDelete] = React.useState(false);
+  const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
+  const [conFirmModify, setConfirmModify] = React.useState(false);
 
-  // console.log(adminData);
+  const handleCloseConfirmDeleteDialog = () => {
+    setConfirmDeleteDialog(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
+    // delete admin
+    axios
+      .delete(baseUrlDelete, { data: { email: adminSelect.email } })
+      .catch((error) => {
+        <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
+      });
+    setAdminSelect({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+    });
+    setConfirmDeleteDialog(false);
+    setOpenUpDateDelete(false);
+    setConfirmDelete(false);
+  }
+
+  const handleCloseConfirmModify = () => {
+    setConfirmModifyDialog(false);
+  };
+
+  const handleConfirmModify = () => {
+    // modifyAdmin
+    setConfirmModify(true);
+    let date = new Date();
+    let dateNow = date.toLocaleDateString();
+    let adminSelectEmail = adminSelect.email;
+  
+    axios
+      .patch(baseUrlupdate,  { 
+        fname: Adminmodify.fname,
+        lname: Adminmodify.lname,
+        emailupdate: Adminmodify.email,
+        password: Adminmodify.password,
+        modifydate: dateNow,
+        email: adminSelectEmail,
+      } )
+      .then((response) => {
+        console.log(response.status);
+        <Alert severity="success">This is a success alert — check it out!</Alert>
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setAdminSelect({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+    });
+    setConfirmModifyDialog(false);
+    setOpenUpDateDelete(false);
+    setConfirmModify(false);
+  }
 
   const [adminSelect, setAdminSelect] = React.useState({
     fname: "",
@@ -67,8 +135,15 @@ const AdminData = () => {
     password: "",
   });
 
+  const [Adminmodify, setAdminModify] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    modifydate: "",
+  });
+
   // console.log(adminSelect);
-  
 
   const handleClickOpenAddAdminDialog = () => {
     setOpenAddAdminDialog(true);
@@ -93,7 +168,9 @@ const AdminData = () => {
     axios.put(baseUrlAdd, adminAdd).then((res) => {
       console.log(res.data.status);
       if (res.data.status === "success") {
-        <Alert severity="success">This is a success alert — check it out!</Alert>
+        <Alert severity="success">
+          This is a success alert — check it out!
+        </Alert>;
       }
     });
     // add Admin
@@ -109,36 +186,22 @@ const AdminData = () => {
   };
 
   const handleSubmitModifyAdmin = () => {
-
-    //modify admin
-    console.log("submit modify");
-    console.log("Admin Select = " + adminSelect.email);
-    setAdminSelect({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-    });
-    setOpenUpDateDelete(false);
+    setConfirmModifyDialog(true);
   };
 
   const handleSubmitDeleteAdmin = () => {
-
-    // delete admin
-    console.log("submit modify");
-    console.log(adminSelect.email);
-    setAdminSelect({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-    });
-    setOpenUpDateDelete(false);
+    setConfirmDeleteDialog(true);
   };
 
   React.useEffect(() => {
     getAdminData();
-  }, []);
+    setAdminModify({
+      fname: adminSelect.fname,
+      lname: adminSelect.lname,
+      email: adminSelect.email,
+      password: adminSelect.password,
+    });
+  }, [adminSelect]);
 
   function getAdminData() {
     axios.get(baseUrl).then((res) => {
@@ -204,10 +267,7 @@ const AdminData = () => {
         </Table>
       </TableContainer>
 
-      
-      
-      
-        <Dialog open={openAddAdminDialog} onClose={handleCloseAddAdminDialog}>
+      <Dialog open={openAddAdminDialog} onClose={handleCloseAddAdminDialog}>
         <DialogContent>
           <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>
 
@@ -226,11 +286,11 @@ const AdminData = () => {
                 fullWidth
                 name="fname"
                 autoFocus
-                onChange={e => {
+                onChange={(e) => {
                   setAdminAdd({
                     ...adminAdd,
-                    fname: e.target.value
-                  })
+                    fname: e.target.value,
+                  });
                 }}
               />
             </Grid>
@@ -244,11 +304,11 @@ const AdminData = () => {
                 fullWidth
                 name="lname"
                 autoFocus
-                onChange={e => {
+                onChange={(e) => {
                   setAdminAdd({
                     ...adminAdd,
-                    lname: e.target.value
-                  })
+                    lname: e.target.value,
+                  });
                 }}
               />
             </Grid>
@@ -262,11 +322,11 @@ const AdminData = () => {
                 fullWidth
                 name="email"
                 autoFocus
-                onChange={e => {
+                onChange={(e) => {
                   setAdminAdd({
                     ...adminAdd,
-                    email: e.target.value
-                  })
+                    email: e.target.value,
+                  });
                 }}
               />
             </Grid>
@@ -280,21 +340,21 @@ const AdminData = () => {
                 fullWidth
                 name="password"
                 autoFocus
-                onChange={e => {
+                onChange={(e) => {
                   setAdminAdd({
                     ...adminAdd,
-                    password: e.target.value
-                  })
+                    password: e.target.value,
+                  });
                 }}
               />
             </Grid>
           </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleSubmitAddAdmin}>ยืนยัน</Button>
-            <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
-          </DialogActions>
-        </Dialog>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSubmitAddAdmin}>ยืนยัน</Button>
+          <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
         <DialogContent>
@@ -305,73 +365,61 @@ const AdminData = () => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={6}>
-              <DialogContentText>
-                <TextField
-                  
-                  id="fname"
-                  label="ชื่อ"
-                  defaultValue={adminSelect.fname}
-                  variant="filled"
-                  onChange={e => {
-                    setAdminSelect({
-                      ...adminSelect,
-                      fname: e.target.value
-                    })
-                  }
-                }
-                />
-              </DialogContentText>
+              <TextField
+                id="fname"
+                label="ชื่อ"
+                defaultValue={adminSelect.fname}
+                variant="filled"
+                onChange={(e) => {
+                  setAdminModify({
+                    ...Adminmodify,
+                    fname: e.target.value,
+                  });
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
-              <DialogContentText>
-                <TextField
-                  id="lname"
-                  label="นามสกุล"
-                  defaultValue={adminSelect.lname}
-                  variant="filled"
-                  onChange={e => {
-                    setAdminSelect({
-                      ...adminSelect,
-                      lname: e.target.value
-                    })
-                  }
-                }
-                />
-              </DialogContentText>
+              <TextField
+                id="lname"
+                label="นามสกุล"
+                defaultValue={adminSelect.lname}
+                variant="filled"
+                onChange={(e) => {
+                  setAdminModify({
+                    ...Adminmodify,
+                    lname: e.target.value,
+                  });
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
-              <DialogContentText>
-                <TextField
-                  id="filled-helperText"
-                  label="อีเมล"
-                  defaultValue={adminSelect.email}
-                  variant="filled"
-                  onChange={e => {
-                    setAdminSelect({
-                      ...adminSelect,
-                      email: e.target.value
-                    })
-                  }
-                }
-                />
-              </DialogContentText>
+              <TextField
+                id="email"
+                label="อีเมล"
+                defaultValue={adminSelect.email}
+                variant="filled"
+                onChange={(e) => {
+                  setAdminModify({
+                    ...Adminmodify,
+                    email: e.target.value,
+                  });
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
-              <DialogContentText>
-                <TextField
-                  id="filled-helperText"
-                  label="รหัสผ่าน"
-                  defaultValue={adminSelect.password}
-                  variant="filled"
-                  onChange={e => {
-                    setAdminSelect({
-                      ...adminSelect,
-                      password: e.target.value
-                    })
-                  }
-                }
-                />
-              </DialogContentText>
+              <TextField
+                id="password"
+                label="รหัสผ่าน"
+                defaultValue={adminSelect.password}
+                variant="filled"
+                type="password"
+                onChange={(e) => {
+                  setAdminModify({
+                    ...Adminmodify,
+                    password: e.target.value,
+                  });
+                }}
+              />
             </Grid>
           </Grid>
         </DialogContent>
@@ -379,7 +427,49 @@ const AdminData = () => {
           <Button onClick={handleSubmitModifyAdmin}>แก้ไข</Button>
           <Button onClick={handleSubmitDeleteAdmin}>ลบผู้ดูแลระบบ</Button>
         </DialogActions>
+
+        <Dialog
+        open={confirmDeleteDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseConfirmDeleteDialog}
+        aria-describedby="ConFirmDelete Desecription"
+      >
+        <DialogTitle>{"ConFirmDelete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="ConFirmDelete Desecription">
+            คุณต้องการลบผู้ดูแลระบบนี้ใช่หรือไม่ หากลบแล้วจะไม่สามารถกู้คืนได้
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDeleteDialog}>ยกเลิก</Button>
+          <Button onClick={handleConfirmDelete}>ยืนยัน</Button>
+        </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={confirmModifyDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseConfirmModify}
+        aria-describedby="ConFirmDelete Desecription"
+      >
+        <DialogTitle>{"ConFirmDelete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="ConFirmDelete Desecription">
+            คุณต้องการแก้ไขข้อมูลผู้ดูแลระบบนี้ใช่หรือไม่
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmModify}>ยกเลิก</Button>
+          <Button onClick={handleConfirmModify}>ยืนยัน</Button>
+        </DialogActions>
+      </Dialog>
+
+      </Dialog>
+
+      
+
     </React.Fragment>
   );
 };

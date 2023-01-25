@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       console.log(res.data);
       if (res.data.status === "AdminLogin") {
         setuserLogin({
-          email: res.data.user,
+          email: res.data.email,
           role: role,
           token: res.data.token,
         });
