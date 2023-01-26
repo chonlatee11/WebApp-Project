@@ -27,7 +27,7 @@ import {
   ListItemText,
   ListItemButton,
 } from "@mui/material";
-import  AdminData  from "./AdminData";
+import AdminData from "./AdminData";
 import ResearchData from "./ResearchData";
 import SucarCaneData from "./SucarCaneData";
 import HistoryData from "./HistoryData";
@@ -84,7 +84,7 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const Auth = UseAuth();
-  console.log("AdminPage"  +  Auth.userLogin);
+  console.log("AdminPage" + Auth.userLogin);
 
   const [selectedOption, setSelectedOption] = React.useState("admin");
 
@@ -216,10 +216,10 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* content Here */}
-              {selectedOption === "admin" && <AdminData/>}
-              {selectedOption === "research" && <ResearchData/>}
-              {selectedOption === "sucarCane" && <SucarCaneData/>}
-              {selectedOption === "history" && <HistoryData/>}
+              {selectedOption === "admin" && <AdminData />}
+              {selectedOption === "research" && <ResearchData />}
+              {selectedOption === "sucarCane" && <SucarCaneData />}
+              {selectedOption === "history" && <HistoryData />}
             </Grid>
           </Container>
         </Box>

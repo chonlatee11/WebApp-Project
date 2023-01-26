@@ -227,7 +227,7 @@ app.put("/AddResearch", jsonParser, function (req, res, next) {
         } else {
           connection.query(
             "INSERT INTO `Researcher` (`Email`, `passWord`, `fName`, `lName`, `phoneNumber`) VALUES ( ?, ?, ?, ?, ?);",
-            [req.body.email, hash, req.body.fname, req.body.lname],
+            [req.body.email, hash, req.body.fname, req.body.lname, req.body.phoneNumber],
             function (err) {
               if (err) {
                 res.json({ err });
@@ -243,14 +243,14 @@ app.put("/AddResearch", jsonParser, function (req, res, next) {
   });
 });
 
-app.delete("/deleteAdmin", jsonParser, function (req, res, next) {
+app.delete("/deleteResearch", jsonParser, function (req, res, next) {
   console.log(req.body);
   poolCluster.getConnection(function (err, connection) {
     if (err) {
       console.log(err);
     } else {
       connection.query(
-        "DELETE FROM `Admin` WHERE `Admin`.`Email` = ?",
+        "DELETE FROM `Researcher` WHERE `Researcher`.`Email` = ?",
         [req.body.email],
         function (err) {
           if (err) {
@@ -266,7 +266,7 @@ app.delete("/deleteAdmin", jsonParser, function (req, res, next) {
   });
 });
 
-app.patch("/updateAdmin", jsonParser, function (req, res, next) {
+app.patch("/updateResearch", jsonParser, function (req, res, next) {
   console.log(req.body);
   const saltRounds = 10;
   const myPlaintextPassword = req.body.password;
@@ -280,7 +280,7 @@ app.patch("/updateAdmin", jsonParser, function (req, res, next) {
           console.log(err);
         } else {
           connection.query(
-            "UPDATE `Admin` SET `fName` = ?, `lName` = ?, `Email` = ?, `passWord` = ?, `modifydate` = ? WHERE `Admin`.`Email` = ?",
+            "UPDATE `Researcher` SET `fName` = ?, `lName` = ?, `Email` = ?, `passWord` = ?, `Modifydate` = ? WHERE `Researcher`.`Email` = ?",
             [
               req.body.fname,
               req.body.lname,
@@ -306,14 +306,14 @@ app.patch("/updateAdmin", jsonParser, function (req, res, next) {
 });
 
 
-app.get("/getAdmin", jsonParser, function (req, res) {
+app.get("/getResearch", jsonParser, function (req, res) {
   console.log(req.body);
   poolCluster.getConnection(function (err, connection) {
     if (err) {
       console.log(err);
     } else {
       connection.query(
-        "SELECT * FROM Admin",
+        "SELECT * FROM Researcher",
         [req.body.userID],
         function (err, data) {
           if (err) {
@@ -330,6 +330,52 @@ app.get("/getAdmin", jsonParser, function (req, res) {
     }
   });
 });
+
+app.put("/HistoryDiseaseModify", jsonParser, function (req, res, next) {
+ poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "INSERT INTO `HistoryDiseaseModify` (`DiseaseID`, `DiseaseName`, `AdminID`, `AdminEmail`, `ModifyDate`, `Detail`) VALUES ( ?, ?, ?, ?, ?, ?);",
+        [req.body.DiseaseID, req.body.DiseaseName, req.body.AdminID, req.body.AdminEmail, req.body.ModifyDate, req.body.Detail],
+        function (err) {
+          if (err) {
+            res.json({ err });
+          } else {
+            res.json({ status: "success" });
+            connection.release();
+          }
+        }
+      );
+    }
+  }
+ );
+}
+);
+
+app.get("/HistoryDiseaseModify", jsonParser, function (req, res, next) {
+  poolCluster.getConnection(function (err, connection) {
+     if (err) {
+       console.log(err);
+     } else {
+       connection.query(
+         "SELECT * FROM `HistoryDiseaseModify`;",
+         function (err, data) {
+           if (err) {
+             res.json({ err });
+           } else {
+             res.json({ status: "success",
+             data: data });
+             connection.release();
+           }
+         }
+       );
+     }
+   }
+  );
+ }
+ );
 
 // app.post('/login', (req, res) => {
 //     const email = req.body.email;

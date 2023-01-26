@@ -17,7 +17,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
-import Slide from '@mui/material/Slide';
+import Slide from "@mui/material/Slide";
 
 const baseUrl = "http://192.168.1.22:3031/getAdmin";
 const baseUrlAdd = "http://192.168.1.22:3031/AddAdmin";
@@ -80,7 +80,7 @@ const AdminData = () => {
     setConfirmDeleteDialog(false);
     setOpenUpDateDelete(false);
     setConfirmDelete(false);
-  }
+  };
 
   const handleCloseConfirmModify = () => {
     setConfirmModifyDialog(false);
@@ -92,19 +92,21 @@ const AdminData = () => {
     let date = new Date();
     let dateNow = date.toLocaleDateString();
     let adminSelectEmail = adminSelect.email;
-  
+
     axios
-      .patch(baseUrlupdate,  { 
+      .patch(baseUrlupdate, {
         fname: Adminmodify.fname,
         lname: Adminmodify.lname,
         emailupdate: Adminmodify.email,
         password: Adminmodify.password,
         modifydate: dateNow,
         email: adminSelectEmail,
-      } )
+      })
       .then((response) => {
         console.log(response.status);
-        <Alert severity="success">This is a success alert — check it out!</Alert>
+        <Alert severity="success">
+          This is a success alert — check it out!
+        </Alert>;
       })
       .catch((error) => {
         console.log(error);
@@ -118,7 +120,7 @@ const AdminData = () => {
     setConfirmModifyDialog(false);
     setOpenUpDateDelete(false);
     setConfirmModify(false);
-  }
+  };
 
   const [adminSelect, setAdminSelect] = React.useState({
     fname: "",
@@ -235,7 +237,7 @@ const AdminData = () => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>ลำดับที่</StyledTableCell>
+              <StyledTableCell align="center">ลำดับที่</StyledTableCell>
               <StyledTableCell align="center">ชื่อ-นามสกุล</StyledTableCell>
               <StyledTableCell align="center">อีเมล</StyledTableCell>
               <StyledTableCell align="center">
@@ -249,7 +251,7 @@ const AdminData = () => {
                 key={adminData.adminID}
                 onClick={() => onhandleSelect(adminData)}
               >
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell component="th" scope="row" align="center">
                   {adminData.adminID}
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -429,47 +431,44 @@ const AdminData = () => {
         </DialogActions>
 
         <Dialog
-        open={confirmDeleteDialog}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseConfirmDeleteDialog}
-        aria-describedby="ConFirmDelete Desecription"
-      >
-        <DialogTitle>{"ConFirmDelete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="ConFirmDelete Desecription">
-            คุณต้องการลบผู้ดูแลระบบนี้ใช่หรือไม่ หากลบแล้วจะไม่สามารถกู้คืนได้
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDeleteDialog}>ยกเลิก</Button>
-          <Button onClick={handleConfirmDelete}>ยืนยัน</Button>
-        </DialogActions>
+          open={confirmDeleteDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleCloseConfirmDeleteDialog}
+          aria-describedby="ConFirmDelete Desecription"
+        >
+          <DialogTitle>{"ยืนยันการลบ"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="ConFirmDelete Desecription">
+              คุณต้องการลบผู้ดูแลระบบนี้ใช่หรือไม่ หากลบแล้วจะไม่สามารถกู้คืนได้
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDeleteDialog}>ยกเลิก</Button>
+            <Button onClick={handleConfirmDelete}>ยืนยัน</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={confirmModifyDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleCloseConfirmModify}
+          aria-describedby="ConFirmDelete Desecription"
+        >
+          <DialogTitle>{"ยืนยันการแก้ไข"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="ConFirmDelete Desecription">
+              คุณต้องการแก้ไขข้อมูลผู้ดูแลระบบนี้ใช่หรือไม่
+              หากแก้ไขแล้วจะเปลี่ยนแปลงทันที
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmModify}>ยกเลิก</Button>
+            <Button onClick={handleConfirmModify}>ยืนยัน</Button>
+          </DialogActions>
+        </Dialog>
       </Dialog>
-
-      <Dialog
-        open={confirmModifyDialog}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseConfirmModify}
-        aria-describedby="ConFirmDelete Desecription"
-      >
-        <DialogTitle>{"ConFirmDelete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="ConFirmDelete Desecription">
-            คุณต้องการแก้ไขข้อมูลผู้ดูแลระบบนี้ใช่หรือไม่
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmModify}>ยกเลิก</Button>
-          <Button onClick={handleConfirmModify}>ยืนยัน</Button>
-        </DialogActions>
-      </Dialog>
-
-      </Dialog>
-
-      
-
     </React.Fragment>
   );
 };
