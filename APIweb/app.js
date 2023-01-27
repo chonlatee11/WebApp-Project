@@ -48,6 +48,7 @@ app.post("/loginADMIN", jsonParser, function (req, res, next) {
                   status: "AdminLogin",
                   token,
                   email: element.Email,
+                  AdminID: 1,
                 });
                 connection.release();
               } else {
@@ -67,8 +68,8 @@ app.post("/loginADMIN", jsonParser, function (req, res, next) {
                         email: element.Email,
                         status: "AdminLogin",
                         token,
+                        AdminID: element.adminID,
                       });
-
                       connection.release();
                     } else {
                       console.log("password not match");
@@ -84,7 +85,6 @@ app.post("/loginADMIN", jsonParser, function (req, res, next) {
 
           if (rows.length == 0 || rows == undefined) {
             res.json({ data: "Not found", status: 401 });
-
             connection.release();
           }
         }
@@ -186,7 +186,6 @@ app.patch("/updateAdmin", jsonParser, function (req, res, next) {
   });
 });
 
-
 app.get("/getAdmin", jsonParser, function (req, res) {
   console.log(req.body);
   poolCluster.getConnection(function (err, connection) {
@@ -227,7 +226,13 @@ app.put("/AddResearch", jsonParser, function (req, res, next) {
         } else {
           connection.query(
             "INSERT INTO `Researcher` (`Email`, `passWord`, `fName`, `lName`, `phoneNumber`) VALUES ( ?, ?, ?, ?, ?);",
-            [req.body.email, hash, req.body.fname, req.body.lname, req.body.phoneNumber],
+            [
+              req.body.email,
+              hash,
+              req.body.fname,
+              req.body.lname,
+              req.body.phoneNumber,
+            ],
             function (err) {
               if (err) {
                 res.json({ err });
@@ -305,7 +310,6 @@ app.patch("/updateResearch", jsonParser, function (req, res, next) {
   });
 });
 
-
 app.get("/getResearch", jsonParser, function (req, res) {
   console.log(req.body);
   poolCluster.getConnection(function (err, connection) {
@@ -332,108 +336,110 @@ app.get("/getResearch", jsonParser, function (req, res) {
 });
 
 app.put("/HistoryDiseaseModify", jsonParser, function (req, res, next) {
- poolCluster.getConnection(function (err, connection) {
+  console.log(req.body);
+  let imagelink = "http://192.168.1.22:3032/image/" + req.body.ImageNameUpdate;
+  poolCluster.getConnection(function (err, connection) {
     if (err) {
       console.log(err);
     } else {
       connection.query(
-        "INSERT INTO `HistoryDiseaseModify` (`DiseaseID`, `DiseaseName`, `AdminID`, `AdminEmail`, `ModifyDate`, `Detail`) VALUES ( ?, ?, ?, ?, ?, ?);",
-        [req.body.DiseaseID, req.body.DiseaseName, req.body.AdminID, req.body.AdminEmail, req.body.ModifyDate, req.body.Detail],
+        "INSERT INTO `HistoryDiseaseModify` (`DiseaseID`, `DiseaseName`, `AdminID`, `AdminEmail`, `ModifyDate`, `InfoUpdate`, `ProtectUpdate`, `NameUpdate`, `ImageNameUpdate`, `NameEngUpdate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        [
+          req.body.DiseaseID,
+          req.body.DiseaseName,
+          req.body.AdminID,
+          req.body.AdminEmail,
+          req.body.ModifyDate,
+          req.body.InfoUpdate,
+          req.body.ProtectUpdate,
+          req.body.NameUpdate,
+          imagelink,
+          req.body.NameEngUpdate,
+        ],
         function (err) {
           if (err) {
             res.json({ err });
           } else {
+            console.log("insert success");
             res.json({ status: "success" });
             connection.release();
           }
         }
       );
     }
-  }
- );
-}
-);
+  });
+});
 
-app.get("/HistoryDiseaseModify", jsonParser, function (req, res, next) {
+app.get("/getHistoryDiseaseModify", jsonParser, function (req, res, next) {
   poolCluster.getConnection(function (err, connection) {
-     if (err) {
-       console.log(err);
-     } else {
-       connection.query(
-         "SELECT * FROM `HistoryDiseaseModify`;",
-         function (err, data) {
-           if (err) {
-             res.json({ err });
-           } else {
-             res.json({ status: "success",
-             data: data });
-             connection.release();
-           }
-         }
-       );
-     }
-   }
-  );
- }
- );
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM `HistoryDiseaseModify`;",
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+          } else {
+            res.json({ status: "success", data: data });
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
 
-// app.post('/login', (req, res) => {
-//     const email = req.body.email;
-//     const password = req.body.password;
-
-//     poolCluster.query(
-//         "SELECT * FROM Admin WHERE email = ? AND password = ?",
-//         [email, password],
-//         (err, result) =>{
-//             if(err){
-//                 res.send({err: err})
-//             }
-
-//             if (result){
-//                     res.send(result);
-//             }else{
-//                     res.send({message: "Wrong email/password"});
-//             }
-//         }
-//     );
-// });
-
-// app.post('/insertAdmin',  jsonParser, function (req, res, next) {
-//     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-//         poolCluster.getConnection(function (err, connection) {
-//             if (err) {
-//               console.log(err);
-//             } else {
-//               connection.query("INSERT INTO Admin (name, email, password) VALUES (?,?,?);",
-//             [req.body.name, req.body.email, hash], function (err, rows) {
-//                 if (err) {
-//               res.json({err})
-//                 } else {
-//                   connection.release();
-//               res.json({rows})
-//                 }
-//               });
-//             }
-//           });
-//     });
-// })
-
-// app.post('/insertResearcher',  jsonParser, function (req, res, next) {
-//   bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-//       poolCluster.getConnection(function (err, connection) {
-//           if (err) {
-//             console.log(err);
-//           } else {
-//             connection.query("INSERT INTO Researcher (name, email, password, phonenumber) VALUES (?,?,?,?);",
-//           [req.body.name, req.body.email, hash, req.body.phonenumber], function (err, rows) {
-//               if (err) {
-//             res.json({err})
-//               } else {
-//                 connection.release();
-//             res.json({rows})
-//               }
-//             });
-//           }
-//         });
-//   });
-// })
+app.post("/ResearcherLogin", jsonParser, function (req, res, next) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM Researcher WHERE Email = ?",
+        [req.body.Email],
+        function (err, rows) {
+          if (err) {
+            console.log(err);
+          } else {
+            for (let index = 0; index < rows.length; index++) {
+              const element = rows[index];  
+                bcrypt.compare(
+                  req.body.passWord,
+                  element.passWord,
+                  function (err, result) {
+                    if (err) {
+                      console.log(err);
+                    }
+                    if (result == true) {
+                      console.log("password match");
+                      var token = jwt.sign({ Email: element.Email }, secret, {
+                        expiresIn: "1h",
+                      });
+                      res.json({
+                        Email: element.Email,
+                        status: "ResearcherLogin",
+                        token,
+                        ReseachID: element.adminID,
+                      });
+                      connection.release();
+                    } else {
+                      console.log("password not match");
+                      // res.status==401;
+                      res.json({ data: "notmatch", status: 402 });
+                      connection.release();
+                    }
+                  }
+                );  
+            }
+          }
+          if (rows.length == 0 || rows == undefined) {
+            res.json({ data: "Not found", status: 401 });
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});

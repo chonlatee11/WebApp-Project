@@ -9,8 +9,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { Grid } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
-const baseUrl = "http://192.168.1.22:3031/HistoryDiseaseModify";
+
+const baseUrl = "http://192.168.1.22:3031/getHistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -40,10 +48,39 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const HistoryData = () => {
   const [historyData, sethistoryData] = React.useState([]);
+  const [openUpDateDelet, setOpenUpDateDelete] = React.useState(false);
+  const [hitorySelect, sethitorySelect] = React.useState({
+    InfoUpdate: "",
+    ModifyDate: "",
+    NameEngUpdate: "",
+    NameUpdate: "",
+    ProtectUpdate: "",
+  });
 
+  console.log(historyData);
   React.useEffect(() => {
     getHistoryData();
   }, []);
+
+  const handleClickOpenUpDateDelete = () => {
+    setOpenUpDateDelete(true);
+  };
+  const handleCloseUpDateDelete = () => {
+    setOpenUpDateDelete(false);
+  };
+
+  const onhandleSelect = (e) => {
+    sethitorySelect({
+      ...hitorySelect,
+      InfoUpdate: e.InfoUpdate,
+      ModifyDate: e.ModifyDate,
+      NameEngUpdate: e.NameEngUpdate,
+      NameUpdate: e.NameUpdate,
+      ProtectUpdate: e.ProtectUpdate,
+      ImageNameUpdate: e.ImageNameUpdate
+    });
+    handleClickOpenUpDateDelete();
+  }
 
   function getHistoryData() {
     axios.get(baseUrl).then((res) => {
@@ -62,17 +99,14 @@ const HistoryData = () => {
               <StyledTableCell align="center">ลำดับที่</StyledTableCell>
               <StyledTableCell align="center">ชื่อโรค</StyledTableCell>
               <StyledTableCell align="center">ผู้แก้ไข</StyledTableCell>
-              <StyledTableCell align="center">
-                รายละเอียดที่แก้ไข
-              </StyledTableCell>
               <StyledTableCell align="center">วันที่แก้ไข</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {historyData.map((historyData) => (
-              <StyledTableRow key={historyData.HistoryID}>
+              <StyledTableRow key={historyData.ReportID} onClick={() => onhandleSelect(historyData)}>
                 <StyledTableCell component="th" scope="row" align="center">
-                  {historyData.HistoryID}
+                  {historyData.ReportID}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {historyData.DiseaseName}
@@ -83,14 +117,74 @@ const HistoryData = () => {
                 <StyledTableCell align="center">
                   {historyData.ModifyDate}
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {historyData.Detail}
-                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
+        <DialogContent>
+          <DialogTitle>ข้อมูลโรค</DialogTitle>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
+            <Grid item xs={6}>
+              <TextField
+                id="InfoDiseaseData"
+                label="ข้อมูลโรคอ้อย"
+                defaultValue={hitorySelect.InfoUpdate}
+                variant="filled"
+                multiline
+                rows={5}
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="ProtectInfoData"
+                label="ข้อมูลการป้องกันโรคในอ้อย"
+                defaultValue={hitorySelect.ProtectUpdate}
+                variant="filled"
+                multiline
+                rows={5}
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="DiseaseNameData"
+                label="ชิ่อของโรคอ้อย"
+                defaultValue={hitorySelect.NameUpdate}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                value={hitorySelect.NameEngUpdate}
+                id="DiseaseNameEngData"
+                label="ชิ่อภาษาอังกฤษ"
+                defaultValue={hitorySelect.NameEngUpdate}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+               <img
+                    src={hitorySelect.ImageNameUpdate}
+                    loading="lazy"
+                    style={{ width: "550px", height: "300px" }}
+                  />
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
     </React.Fragment>
   );
 };

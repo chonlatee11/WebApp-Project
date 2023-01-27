@@ -18,11 +18,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
+import { UseAuth } from "../../context/AuthConext";
 
 const baseUrl = "http://192.168.1.22:3032/getDisease";
 const baseUrlAdd = "http://192.168.1.22:3032/AddDisease";
 const baseUrlupdate = "http://192.168.1.22:3032/updateDisease";
 const baseUrlDelete = "http://192.168.1.22:3032/deleteDisease";
+const baseUrlHistory = "http://192.168.1.22:3031/HistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -51,14 +53,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const SucarCaneData = () => {
+  const Auth = UseAuth();
   const [sucarCaneData, setsucarCaneData] = React.useState([]);
-  const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] =
-    React.useState(false);
+  const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] = React.useState(false);
   const [openUpDateDelet, setOpenUpDateDelete] = React.useState(false);
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
   const [conFirmDelete, setConfirmDelete] = React.useState(false);
   const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
   const [conFirmModify, setConfirmModify] = React.useState(false);
+  const [DiseaseSelect, setDiseaseSelect] = React.useState({
+    DiseaseName: "",
+    InfoDisease: "",
+    ProtectInfo: "",
+    DiseaseNameEng: "",
+    ImageName: "",
+  });
+
+  const [DiseaseAdd, setDiseaseAdd] = React.useState({
+    DiseaseName: "",
+    InfoDisease: "",
+    ProtectInfo: "",
+    DiseaseNameEng: "",
+    file: "",
+  });
+
+  const [DiseaseModify, setDiseaseModify] = React.useState({
+    DiseaseName: "",
+    InfoDisease: "",
+    ProtectInfo: "",
+    DiseaseNameEng: "",
+    file: "",
+  });
+
+  
+  const updateHistory = (dateNow) => {
+    const Admin = localStorage.getItem('User');
+    console.log(JSON.parse(Admin));
+    let historyUpdate = {
+      DiseaseID: DiseaseSelect.DiseaseID,
+      DiseaseName: DiseaseSelect.DiseaseName,
+      AdminEmail: JSON.parse(Admin).email,
+      ModifyDate: dateNow,
+      AdminID: JSON.parse(Admin).AdminID,
+      InfoUpdate: DiseaseModify.InfoDisease,
+      NameUpdate: DiseaseModify.DiseaseName,
+      ProtectUpdate: DiseaseModify.ProtectInfo,
+      NameEngUpdate: DiseaseModify.DiseaseNameEng,
+      ImageNameUpdate: DiseaseModify.file.name,
+    }
+    console.log("updatedata = " + historyUpdate);
+    axios.put(baseUrlHistory, historyUpdate).then((res) => {
+      console.log(res.data);
+      if (res.status === 200) {
+        console.log("updatehistory success");
+      }
+    });
+  }
 
   const handleCloseConfirmDeleteDialog = () => {
     setConfirmDeleteDialog(false);
@@ -92,9 +142,11 @@ const SucarCaneData = () => {
   const handleConfirmModify = () => {
     // modifyDisease
     setConfirmModify(true);
+    // console.log(DiseaseModify.file.name);
     let DiseaseSelctID = DiseaseSelect.DiseaseID;
     let date = new Date();
     let dateNow = date.toLocaleDateString();
+    updateHistory(dateNow);
     const formData = new FormData();
     formData.append("file", DiseaseModify.file);
     formData.append("DiseaseName", DiseaseModify.DiseaseName);
@@ -106,6 +158,7 @@ const SucarCaneData = () => {
     axios.patch(baseUrlupdate, formData).then((res) => {
       console.log(res.data.status);
       if (res.data.status === "success") {
+        console.log("update success");
       }
     });
     setDiseaseSelect({
@@ -120,30 +173,6 @@ const SucarCaneData = () => {
     setOpenUpDateDelete(false);
     setConfirmModify(false);
   };
-
-  const [DiseaseSelect, setDiseaseSelect] = React.useState({
-    DiseaseName: "",
-    InfoDisease: "",
-    ProtectInfo: "",
-    DiseaseNameEng: "",
-    ImageName: "",
-  });
-
-  const [DiseaseAdd, setDiseaseAdd] = React.useState({
-    DiseaseName: "",
-    InfoDisease: "",
-    ProtectInfo: "",
-    DiseaseNameEng: "",
-    file: "",
-  });
-
-  const [DiseaseModify, setDiseaseModify] = React.useState({
-    DiseaseName: "",
-    InfoDisease: "",
-    ProtectInfo: "",
-    DiseaseNameEng: "",
-    file: "",
-  });
 
   const handleClickOpenAddDiseaseDialog = () => {
     setOpenAddSucarCaneDialog(true);
@@ -180,6 +209,7 @@ const SucarCaneData = () => {
     axios.put(baseUrlAdd, formData).then((res) => {
       console.log(res.data.status);
       if (res.data.status === "success") {
+        console.log("add success");
       }
     });
     setDiseaseAdd({

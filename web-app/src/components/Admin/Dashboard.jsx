@@ -84,8 +84,6 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const Auth = UseAuth();
-  console.log("AdminPage" + Auth.userLogin);
-
   const [selectedOption, setSelectedOption] = React.useState("admin");
 
   const handleLogOut = () => {
