@@ -421,7 +421,7 @@ app.post("/ResearcherLogin", jsonParser, function (req, res, next) {
                         Email: element.Email,
                         status: "ResearcherLogin",
                         token,
-                        ReseachID: element.adminID,
+                        ReseachID: element.researcherID,
                       });
                       connection.release();
                     } else {
@@ -440,6 +440,178 @@ app.post("/ResearcherLogin", jsonParser, function (req, res, next) {
           }
         }
       );
+    }
+  });
+});
+
+app.get("/DiseaseAllReport", jsonParser, function (req, res) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM DiseaseReport",
+        [req.body.userID],
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+          } else {
+            console.log(data.length);
+            for (let i = 0; i < data.length; i++) {
+              // กลับมาแก้ตรงนี้ image URl port ต้องเปลี่ยน
+              data[i].ImageUrl =
+                "http://192.168.1.22:3030/image/" + data[i].DiseaseImage;
+            }
+            res.json({ data });
+            // connection.end();
+            connection.release();
+          }
+        }
+      );
+    }
+  });
+});
+
+app.post("/getSelectUser", jsonParser, function (req, res) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM `User` WHERE fName LIKE ? OR lName LIKE ?;",
+        [req.body.Name, req.body.Name],
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+            connection.release();
+          } else {
+            console.log(data.length);
+            if (data.length == 0) {
+              res.json({ data: 401 , status: 401 });
+              connection.release();
+            } else {
+              res.json({ data });
+              // connection.end();
+              connection.release();
+            }
+          }
+        }
+      );
+    }
+  });
+});
+
+app.post("/getSelectDesease", jsonParser, function (req, res) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM `DiseaseReport` WHERE DiseaseName LIKE ?;",
+        [req.body.Name, req.body.Name],
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+            connection.release();
+          } else {
+            console.log(data.length);
+            if (data.length == 0) {
+              res.json({ data: 401 , status: 401 });
+              connection.release();
+            } else {
+              res.json({ data });
+              // connection.end();
+              connection.release();
+            }
+          }
+        }
+      );
+    }
+  });
+});
+
+app.post("/getSelectResearch", jsonParser, function (req, res) {
+  console.log(req.body);
+  poolCluster.getConnection(function (err, connection) {
+    if (err) {
+      console.log(err);
+    } else {
+      connection.query(
+        "SELECT * FROM `Researcher` WHERE researcherID = ?;",
+        [req.body.researcherID],
+        function (err, data) {
+          if (err) {
+            res.json({ err });
+            connection.release();
+          } else {
+            console.log(data.length);
+            if (data.length == 0) {
+              res.json({ data: 401 , status: 401 });
+              connection.release();
+            } else {
+              res.json({ data });
+              // connection.end();
+              connection.release();
+            }
+          }
+        }
+      );
+    }
+  });
+});
+
+app.patch("/updataSelectResearch", jsonParser, function (req, res) {
+  console.log(req.body);
+  // poolCluster.getConnection(function (err, connection) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     connection.query(
+  //       "UPDATE `Researcher` SET `Email` = ?, `passWord` = ?, `fName` = ?, `lName` = ?, `Modifydate` = ?, `phoneNumber` = ? WHERE `Researcher`.`researcherID` = ?",
+  //       [req.body.Email, req.body.passWord, req.body.fName, req.body.lName, req.body.Modifydate, req.body.phoneNumber, req.body.researcherID],
+  //       function (err) {
+  //         if (err) {
+  //           res.json({ err });
+  //         } else {
+  //           console.log("update success");
+  //           res.json({ status: "success" });
+  //           connection.release();
+  //         }
+  //       }
+  //     );
+  //   }
+  // });
+  const saltRounds = 10;
+  const myPlaintextPassword = req.body.passWord;
+  bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+    console.log(hash);
+    if (err) {
+      console.log(err);
+    } else {
+      poolCluster.getConnection(function (err, connection) {
+        if (err) {
+          console.log(err);
+        } else {
+          connection.query(
+            "UPDATE `Researcher` SET `Email` = ?, `passWord` = ?, `fName` = ?, `lName` = ?, `Modifydate` = ?, `phoneNumber` = ? WHERE `Researcher`.`researcherID` = ?",
+            [
+              req.body.Email, hash, req.body.fName, req.body.lName, req.body.Modifydate, req.body.phoneNumber, req.body.researcherID
+            ],
+            function (err) {
+              if (err) {
+                res.json({ err });
+              } else {
+                console.log("update success");
+                res.json({ status: "success" });
+                connection.release();
+              }
+            }
+          );
+        }
+      });
     }
   });
 });

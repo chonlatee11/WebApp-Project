@@ -18,7 +18,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-import { UseAuth } from "../../context/AuthConext";
 
 const baseUrl = "http://192.168.1.22:3032/getDisease";
 const baseUrlAdd = "http://192.168.1.22:3032/AddDisease";
@@ -53,10 +52,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const SucarCaneData = () => {
-  const Auth = UseAuth();
   const [sucarCaneData, setsucarCaneData] = React.useState([]);
   const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] = React.useState(false);
-  const [openUpDateDelet, setOpenUpDateDelete] = React.useState(false);
+  const [openUpDateDelete, setopenUpDateDeletee] = React.useState(false);
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
   const [conFirmDelete, setConfirmDelete] = React.useState(false);
   const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
@@ -131,7 +129,7 @@ const SucarCaneData = () => {
       DiseaseNameEng: "",
     });
     setConfirmDeleteDialog(false);
-    setOpenUpDateDelete(false);
+    setopenUpDateDeletee(false);
     setConfirmDelete(false);
   };
 
@@ -170,7 +168,7 @@ const SucarCaneData = () => {
       Modifydate: "",
     });
     setConfirmModifyDialog(false);
-    setOpenUpDateDelete(false);
+    setopenUpDateDeletee(false);
     setConfirmModify(false);
   };
 
@@ -189,11 +187,11 @@ const SucarCaneData = () => {
     });
   };
 
-  const handleClickOpenUpDateDelete = () => {
-    setOpenUpDateDelete(true);
+  const handleClickopenUpDateDeletee = () => {
+    setopenUpDateDeletee(true);
   };
   const handleCloseUpDateDelete = () => {
-    setOpenUpDateDelete(false);
+    setopenUpDateDeletee(false);
   };
 
   const handleSubmitDisease = () => {
@@ -258,7 +256,7 @@ const SucarCaneData = () => {
       DiseaseID: e.DiseaseID,
       ImageUrl: e.ImageName,
     });
-    handleClickOpenUpDateDelete();
+    handleClickopenUpDateDeletee();
   };
 
   return (
@@ -439,7 +437,7 @@ const SucarCaneData = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
+      <Dialog open={openUpDateDelete} onClose={handleCloseUpDateDelete}>
         <DialogContent>
           <DialogTitle>ข้อมูลโรค</DialogTitle>
           <Grid

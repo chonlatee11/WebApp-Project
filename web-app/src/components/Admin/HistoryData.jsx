@@ -10,12 +10,10 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { Grid } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 
 
 const baseUrl = "http://192.168.1.22:3031/getHistoryDiseaseModify";
