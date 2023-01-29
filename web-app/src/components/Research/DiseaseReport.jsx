@@ -15,11 +15,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
-const baseUrl = "http://192.168.1.22:3031/DiseaseAllReport";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const baseUrl = "http://localhost:3031/DiseaseAllReport";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,7 +53,6 @@ const DiseaseReport = () => {
     AddressUser: "",
   });
 
-  console.log(reportData);
   React.useEffect(() => {
     getreportData();
   }, []);
@@ -82,7 +77,7 @@ const DiseaseReport = () => {
       AddressUser: e.AddressUser,
     });
     handleClickOpenUpDateDelete();
-  }
+  };
 
   function getreportData() {
     axios.get(baseUrl).then((res) => {
@@ -98,18 +93,21 @@ const DiseaseReport = () => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ whiteSpace: "nowrap" }}>
             <TableRow>
-            <StyledTableCell align="center">ลำดับที่</StyledTableCell>
-             <StyledTableCell align="center">ชื่อ-นามสกุล</StyledTableCell>
-             <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
-             <StyledTableCell align="center">ที่อยู่</StyledTableCell>
-             <StyledTableCell align="center">โรคที่รายงาน</StyledTableCell>
+              <StyledTableCell align="center">ลำดับที่</StyledTableCell>
+              <StyledTableCell align="center">ชื่อ-นามสกุล</StyledTableCell>
+              <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
+              <StyledTableCell align="center">ที่อยู่</StyledTableCell>
+              <StyledTableCell align="center">โรคที่รายงาน</StyledTableCell>
               <StyledTableCell align="center">ผลของการจำแนกโรค</StyledTableCell>
-             <StyledTableCell align="center">วันที่รายงาน</StyledTableCell>
+              <StyledTableCell align="center">วันที่รายงาน</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {reportData.map((reportData) => (
-              <StyledTableRow key={reportData.ReportID} onClick={() => onhandleSelect(reportData)}>
+              <StyledTableRow
+                key={reportData.ReportID}
+                onClick={() => onhandleSelect(reportData)}
+              >
                 <StyledTableCell component="th" scope="row" align="center">
                   {reportData.ReportID}
                 </StyledTableCell>
@@ -186,11 +184,11 @@ const DiseaseReport = () => {
               />
             </Grid>
             <Grid item xs={6}>
-               <img
-                    src={reportDataSelect.ImageUrl}
-                    loading="lazy"
-                    style={{ width: "550px", height: "300px" }}
-                  />
+              <img
+                src={reportDataSelect.ImageUrl}
+                loading="lazy"
+                style={{ width: "550px", height: "300px" }}
+              />
             </Grid>
           </Grid>
         </DialogContent>

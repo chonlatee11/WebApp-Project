@@ -213,7 +213,6 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* content Here */}
               {selectedOption === "admin" && <AdminData />}
               {selectedOption === "research" && <ResearchData />}
               {selectedOption === "sucarCane" && <SucarCaneData />}

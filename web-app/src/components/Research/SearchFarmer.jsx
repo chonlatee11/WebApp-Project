@@ -13,13 +13,7 @@ import { Grid , Box} from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
-const baseUrl = "http://192.168.1.22:3031/getSelectUser";
-
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
+const baseUrl = "http://localhost:3031/getSelectUser";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,12 +40,8 @@ const SearchFarmer = () => {
     Name: "",
   });
 
-  // console.log(userData);
   function getUserSearch() {
-    console.log(userSearch);
-    console.log(userData);
     axios.post(baseUrl,userSearch).then((res) => {
-      console.log(res.data);
       setuserData(res.data.data);
     });
   }

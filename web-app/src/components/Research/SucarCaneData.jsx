@@ -23,7 +23,7 @@ const SucarCaneData = () => {
   const mapRef = React.useRef();
 
   //loaddata
-  const url = "http://192.168.1.22:3031/DiseaseAllReport";
+  const url = "http://localhost:3031/DiseaseAllReport";
   const [report, setReport] = React.useState([]);
   const [openDialog, setopenDialog] = React.useState(false);
   const [selectedReport, setselectedReport] = React.useState({
@@ -45,13 +45,11 @@ const SucarCaneData = () => {
 
   function getData() {
     axios.get(url).then((res) => {
-      console.log(res.data.data);
       setReport(res.data.data);
     });
   }
 
   const onMarkerClick = (data) => {
-    console.log(data);
     setselectedReport({
       ReportID: data.ReportID,
       UserFname: data.UserFname,
@@ -77,7 +75,6 @@ const SucarCaneData = () => {
   React.useEffect(() => {
     getData();
   }, []);
-  console.log(report);
   return (
     <React.Fragment>
       <Box
@@ -151,7 +148,7 @@ const SucarCaneData = () => {
                     <CoronavirusIcon
                       sx={{
                         color: "white",
-                        backgroundColor: crime.colorShow,  
+                        backgroundColor: crime.colorShow,
                         borderRadius: "50%",
                       }}
                     />

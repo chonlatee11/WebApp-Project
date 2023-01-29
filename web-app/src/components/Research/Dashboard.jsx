@@ -1,11 +1,11 @@
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
-import MapIcon from '@mui/icons-material/Map';
-import ReportIcon from '@mui/icons-material/Report';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+import MapIcon from "@mui/icons-material/Map";
+import ReportIcon from "@mui/icons-material/Report";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -89,24 +89,23 @@ function DashboardContent() {
 
   const handleLogOut = () => {
     Auth.logout();
-  }
+  };
 
   const handleDiseaseReportSelection = () => {
-    setSelectedOption("DiseaseReport")
+    setSelectedOption("DiseaseReport");
   };
   const handleProfileSelection = () => {
-    setSelectedOption("Profile")
+    setSelectedOption("Profile");
   };
   const handlesucarCaneReportSelection = () => {
-    setSelectedOption("sucarCaneReport")
+    setSelectedOption("sucarCaneReport");
   };
   const handleSearchFarmerSelection = () => {
-    setSelectedOption("SearchFarmer")
+    setSelectedOption("SearchFarmer");
   };
   const handleSearchDiseaseSelection = () => {
-    setSelectedOption("SearchDisease")
+    setSelectedOption("SearchDisease");
   };
-  
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -146,7 +145,6 @@ function DashboardContent() {
             <IconButton color="inherit" onClick={handleLogOut}>
               <LogoutIcon />
             </IconButton>
-            
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -164,38 +162,51 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
 
-          
-
           <List component="nav">
             <ListItemButton>
               <ListItemIcon>
                 <MapIcon />
               </ListItemIcon>
-              <ListItemText primary="การระบาด" onClick={handlesucarCaneReportSelection}/>
+              <ListItemText
+                primary="การระบาด"
+                onClick={handlesucarCaneReportSelection}
+              />
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
-              <ListItemText primary="ข้อมูลส่วนตัว" onClick={handleProfileSelection}/>
+              <ListItemText
+                primary="ข้อมูลส่วนตัว"
+                onClick={handleProfileSelection}
+              />
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>
                 <ReportIcon />
               </ListItemIcon>
-              <ListItemText primary="การรายงานโรคอ้อย" onClick={handleDiseaseReportSelection}/>
+              <ListItemText
+                primary="การรายงานโรคอ้อย"
+                onClick={handleDiseaseReportSelection}
+              />
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>
                 <PersonSearchIcon />
               </ListItemIcon>
-              <ListItemText primary="ค้นหาข้อมูลเกษตรกร" onClick={handleSearchFarmerSelection}/>
+              <ListItemText
+                primary="ค้นหาข้อมูลเกษตรกร"
+                onClick={handleSearchFarmerSelection}
+              />
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>
                 <ImageSearchIcon />
               </ListItemIcon>
-              <ListItemText primary="ค้นหาข้อมูลโรคที่ระบาด" onClick={handleSearchDiseaseSelection}/>
+              <ListItemText
+                primary="ค้นหาข้อมูลโรคที่ระบาด"
+                onClick={handleSearchDiseaseSelection}
+              />
             </ListItemButton>
           </List>
           <Divider sx={{ my: 1 }} />
@@ -215,12 +226,11 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* content Here */}
-              {selectedOption === "sucarCaneReport" && <SucarCaneData/>}
-              {selectedOption === "Profile" && <Profile/>}
-              {selectedOption === "DiseaseReport" && <DiseaseReport/>}
-              {selectedOption === "SearchFarmer" && <SearchFarmer/>}
-              {selectedOption === "SearchDisease" && <SearchDisease/>}
+              {selectedOption === "sucarCaneReport" && <SucarCaneData />}
+              {selectedOption === "Profile" && <Profile />}
+              {selectedOption === "DiseaseReport" && <DiseaseReport />}
+              {selectedOption === "SearchFarmer" && <SearchFarmer />}
+              {selectedOption === "SearchDisease" && <SearchDisease />}
             </Grid>
           </Container>
         </Box>

@@ -9,12 +9,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
-import { Grid , Box} from "@mui/material";
-import IconButton from '@mui/material/IconButton';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { Grid, Box } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 
-const baseUrl = "http://192.168.1.22:3031/getSelectDesease";
-
+const baseUrl = "http://localhost:3031/getSelectDesease";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,12 +40,8 @@ const SearchDisease = () => {
     Name: "",
   });
 
-  // console.log(diseaseData);
   function getdiseaseSearch() {
-    console.log(diseaseSearch);
-    console.log(diseaseData);
-    axios.post(baseUrl,diseaseSearch).then((res) => {
-      console.log(res.data);
+    axios.post(baseUrl, diseaseSearch).then((res) => {
       setdiseaseData(res.data.data);
     });
   }
@@ -54,18 +49,28 @@ const SearchDisease = () => {
   return (
     <React.Fragment>
       <Grid container width={"100%"} justifyContent={"center"}>
-      <Box my={2}>
-        <TextField  id="outlined-search" label="ค้นหาโรคที่ระบาด" type="search" onChange={(e) => {
-                  setdiseaseSearch({
-                    ...diseaseSearch,
-                    Name: e.target.value,
-                  });
-                }}/>
-        <IconButton  size={'large'} color="primary" aria-label="Search-people" component="label" onClick={getdiseaseSearch}>
-        <PersonSearchIcon  />
-      </IconButton>
-    </Box>
-        
+        <Box my={2}>
+          <TextField
+            id="outlined-search"
+            label="ค้นหาโรคที่ระบาด"
+            type="search"
+            onChange={(e) => {
+              setdiseaseSearch({
+                ...diseaseSearch,
+                Name: e.target.value,
+              });
+            }}
+          />
+          <IconButton
+            size={"large"}
+            color="primary"
+            aria-label="Search-people"
+            component="label"
+            onClick={getdiseaseSearch}
+          >
+            <PersonSearchIcon />
+          </IconButton>
+        </Box>
       </Grid>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -74,28 +79,20 @@ const SearchDisease = () => {
               <StyledTableCell>ลำดับที่</StyledTableCell>
               <StyledTableCell align="center">ชื่อโรค</StyledTableCell>
               <StyledTableCell align="center">ผู้รายงาน</StyledTableCell>
-              <StyledTableCell align="center">
-                วันที่รายงาน
-              </StyledTableCell>
+              <StyledTableCell align="center">วันที่รายงาน</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {diseaseData == 401 ? (
               <StyledTableRow>
-              <StyledTableCell component="th" scope="row">
-                ไม่มีข้อมูล
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                ไม่มีข้อมูล
-              </StyledTableCell>
-              <StyledTableCell align="center">
-              ไม่มีข้อมูล
-              </StyledTableCell>
-              <StyledTableCell align="center">
-              ไม่มีข้อมูล
-              </StyledTableCell>
-            </StyledTableRow>
-            ):(
+                <StyledTableCell component="th" scope="row">
+                  ไม่มีข้อมูล
+                </StyledTableCell>
+                <StyledTableCell align="center">ไม่มีข้อมูล</StyledTableCell>
+                <StyledTableCell align="center">ไม่มีข้อมูล</StyledTableCell>
+                <StyledTableCell align="center">ไม่มีข้อมูล</StyledTableCell>
+              </StyledTableRow>
+            ) : (
               diseaseData.map((diseaseData) => (
                 <StyledTableRow key={diseaseData.ReportID}>
                   <StyledTableCell component="th" scope="row">

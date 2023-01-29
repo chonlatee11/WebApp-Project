@@ -16,7 +16,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
 
-const baseUrl = "http://192.168.1.22:3031/getHistoryDiseaseModify";
+const baseUrl = "http://localhost:3031/getHistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,7 +55,7 @@ const HistoryData = () => {
     ProtectUpdate: "",
   });
 
-  console.log(historyData);
+  
   React.useEffect(() => {
     getHistoryData();
   }, []);

@@ -19,10 +19,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 
-const baseUrl = "http://192.168.1.22:3031/getAdmin";
-const baseUrlAdd = "http://192.168.1.22:3031/AddAdmin";
-const baseUrlupdate = "http://192.168.1.22:3031/updateAdmin";
-const baseUrlDelete = "http://192.168.1.22:3031/deleteAdmin";
+const baseUrl = "http://localhost:3031/getAdmin";
+const baseUrlAdd = "http://localhost:3031/AddAdmin";
+const baseUrlupdate = "http://localhost:3031/updateAdmin";
+const baseUrlDelete = "http://localhost:3031/deleteAdmin";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -144,8 +144,6 @@ const AdminData = () => {
     password: "",
     modifydate: "",
   });
-
-  // console.log(adminSelect);
 
   const handleClickOpenAddAdminDialog = () => {
     setOpenAddAdminDialog(true);

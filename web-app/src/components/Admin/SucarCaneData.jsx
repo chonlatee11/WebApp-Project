@@ -19,11 +19,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 
-const baseUrl = "http://192.168.1.22:3032/getDisease";
-const baseUrlAdd = "http://192.168.1.22:3032/AddDisease";
-const baseUrlupdate = "http://192.168.1.22:3032/updateDisease";
-const baseUrlDelete = "http://192.168.1.22:3032/deleteDisease";
-const baseUrlHistory = "http://192.168.1.22:3031/HistoryDiseaseModify";
+const baseUrl = "http://localhost:3032/getDisease";
+const baseUrlAdd = "http://localhost:3032/AddDisease";
+const baseUrlupdate = "http://localhost:3032/updateDisease";
+const baseUrlDelete = "http://localhost:3032/deleteDisease";
+const baseUrlHistory = "http://localhost:3031/HistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,7 +53,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const SucarCaneData = () => {
   const [sucarCaneData, setsucarCaneData] = React.useState([]);
-  const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] = React.useState(false);
+  const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] =
+    React.useState(false);
   const [openUpDateDelete, setopenUpDateDeletee] = React.useState(false);
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
   const [conFirmDelete, setConfirmDelete] = React.useState(false);
@@ -83,9 +84,8 @@ const SucarCaneData = () => {
     file: "",
   });
 
-  
   const updateHistory = (dateNow) => {
-    const Admin = localStorage.getItem('User');
+    const Admin = localStorage.getItem("User");
     console.log(JSON.parse(Admin));
     let historyUpdate = {
       DiseaseID: DiseaseSelect.DiseaseID,
@@ -98,7 +98,7 @@ const SucarCaneData = () => {
       ProtectUpdate: DiseaseModify.ProtectInfo,
       NameEngUpdate: DiseaseModify.DiseaseNameEng,
       ImageNameUpdate: DiseaseModify.file.name,
-    }
+    };
     console.log("updatedata = " + historyUpdate);
     axios.put(baseUrlHistory, historyUpdate).then((res) => {
       console.log(res.data);
@@ -106,7 +106,7 @@ const SucarCaneData = () => {
         console.log("updatehistory success");
       }
     });
-  }
+  };
 
   const handleCloseConfirmDeleteDialog = () => {
     setConfirmDeleteDialog(false);
@@ -140,7 +140,6 @@ const SucarCaneData = () => {
   const handleConfirmModify = () => {
     // modifyDisease
     setConfirmModify(true);
-    // console.log(DiseaseModify.file.name);
     let DiseaseSelctID = DiseaseSelect.DiseaseID;
     let date = new Date();
     let dateNow = date.toLocaleDateString();

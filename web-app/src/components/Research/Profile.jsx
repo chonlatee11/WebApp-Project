@@ -10,8 +10,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 
-const baseUrl = "http://192.168.1.22:3031/getSelectResearch";
-const baseUrlupdate = "http://192.168.1.22:3031/updataSelectResearch";
+const baseUrl = "http://localhost:3031/getSelectResearch";
+const baseUrlupdate = "http://localhost:3031/updataSelectResearch";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -60,7 +60,6 @@ const Profile = () => {
         Modifydate: dateNow,
       })
       .then((res) => {
-        console.log(res.data.status);
         if (res.data.status === "success") {
           console.log("update success");
         }
