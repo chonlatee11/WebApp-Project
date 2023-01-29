@@ -187,7 +187,7 @@ const SucarCaneData = () => {
     });
   };
 
-  const handleClickopenUpDateDeletee = () => {
+  const handleClickopenUpDateDelete = () => {
     setopenUpDateDeletee(true);
   };
   const handleCloseUpDateDelete = () => {
@@ -256,7 +256,7 @@ const SucarCaneData = () => {
       DiseaseID: e.DiseaseID,
       ImageUrl: e.ImageName,
     });
-    handleClickopenUpDateDeletee();
+    handleClickopenUpDateDelete();
   };
 
   return (

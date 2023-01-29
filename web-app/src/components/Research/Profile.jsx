@@ -49,10 +49,6 @@ const Profile = () => {
   const handleConfirmModify = () => {
     let date = new Date();
     let dateNow = date.toLocaleDateString();
-    // modifyProfile
-    // setConfirmModify(true);
-    // console.log(rearchModify.file.name);
-    // console.log(researchModify);
     axios
       .patch(baseUrlupdate, {
         researcherID: researchModify.researcherID,
@@ -111,6 +107,7 @@ const Profile = () => {
       fName: research.fName,
       lName: research.lName,
       phoneNumber: research.phoneNumber,
+      Modifydate: research.Modifydate,
     });
   };
 

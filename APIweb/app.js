@@ -565,25 +565,6 @@ app.post("/getSelectResearch", jsonParser, function (req, res) {
 
 app.patch("/updataSelectResearch", jsonParser, function (req, res) {
   console.log(req.body);
-  // poolCluster.getConnection(function (err, connection) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     connection.query(
-  //       "UPDATE `Researcher` SET `Email` = ?, `passWord` = ?, `fName` = ?, `lName` = ?, `Modifydate` = ?, `phoneNumber` = ? WHERE `Researcher`.`researcherID` = ?",
-  //       [req.body.Email, req.body.passWord, req.body.fName, req.body.lName, req.body.Modifydate, req.body.phoneNumber, req.body.researcherID],
-  //       function (err) {
-  //         if (err) {
-  //           res.json({ err });
-  //         } else {
-  //           console.log("update success");
-  //           res.json({ status: "success" });
-  //           connection.release();
-  //         }
-  //       }
-  //     );
-  //   }
-  // });
   const saltRounds = 10;
   const myPlaintextPassword = req.body.passWord;
   bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {

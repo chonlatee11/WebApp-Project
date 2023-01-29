@@ -1,78 +1,226 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import * as React from "react";
 import axios from "axios";
+import GoogleMapReact from "google-map-react";
+import { Grid, Box } from "@mui/material";
+import CoronavirusIcon from '@mui/icons-material/Coronavirus';
+import IconButton from '@mui/material/IconButton';
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
-  
- const SucarCaneData = () => {
-    const baseUrl = "https://jsonplaceholder.typicode.com/users"
-    const [DiseaseReport, setDiseaseReport] = React.useState([])
+const Marker = ({ children }) => children;
 
-    React.useEffect(() => {
-        getDiseaseReport()
-    }, [])
 
-    console.log(DiseaseReport)
+const SucarCaneData = () => {
+  const [duration, setDuration] = React.useState("all");
+  // map setup
+  const mapRef = React.useRef();
 
-    function getDiseaseReport() {
-        axios.get(baseUrl).then((res) => {
-        console.log(res.data);
-        setDiseaseReport(res.data)
-      });
+  //loaddata
+  const url = "http://192.168.1.22:3031/DiseaseAllReport";
+  const [report, setReport] = React.useState([]);
+  const [openDialog, setopenDialog] = React.useState(false);
+  const [selectedReport, setselectedReport] = React.useState({
+    ReportID: "",
+    UserFname: "",
+    UserLname: "",
+    PhoneNumber: "",
+    Detail: "",
+    DiseaseName: "",
+    ResaultPredict: "",
+    DateReport: "",
+    AddressUser: "",
+    DiseaseNameEng: "",
+  });
+
+  const handleChange = (event) => {
+    setDuration(event.target.value);
   };
 
-    return(
-        <React.Fragment>
-        <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>ลำดับที่</StyledTableCell>
-            <StyledTableCell align="center">วันที่แก้ไข</StyledTableCell>
-            <StyledTableCell align="center">โรคที่แก้ไข</StyledTableCell>
-            <StyledTableCell align="center">รายละเอียดการแก้ไข</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {DiseaseReport.map((DiseaseReport) => (
-            <StyledTableRow key={DiseaseReport.id} >
-              <StyledTableCell component="th" scope="row">
-                {DiseaseReport.id}
-              </StyledTableCell>
-              <StyledTableCell align="center">{DiseaseReport.name}</StyledTableCell>
-              <StyledTableCell align="center">{DiseaseReport.email}</StyledTableCell>
-              <StyledTableCell align="center">{DiseaseReport.address.zipcode}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-        </React.Fragment>
-    );
-}
+  function getData() {
+    axios.get(url).then((res) => {
+      console.log(res.data.data);
+      setReport(res.data.data);
+    });
+  }
 
-export default SucarCaneData
+  const onMarkerClick = (data) => {
+    console.log(data);
+    setselectedReport({
+      ReportID: data.ReportID,
+      UserFname: data.UserFname,
+      UserLname: data.UserLname,
+      PhoneNumber: data.PhoneNumber,
+      Detail: data.Detail,
+      DiseaseName: data.DiseaseName,
+      ResaultPredict: data.ResaultPredict,
+      DateReport: data.DateReport,
+      AddressUser: data.AddressUser,
+      DiseaseNameEng: data.DiseaseNameEng,
+    });
+    handleClickopenDialog();
+  }
+
+  const handleClickopenDialog = () => {
+    setopenDialog(true);
+  };
+  const handleCloseDialog = () => {
+    setopenDialog(false);
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+  console.log(report);
+  return (
+    <React.Fragment>
+      <Box mt={0} width={'100%'} sx={{ justifyContent: 'center', alignItems: 'center'}}>
+      <Box mt={1} width={'20%'}>
+        <InputLabel  id="duration-select-label" >เลือกช่วงเวลาการแสดงผล</InputLabel>
+        <FormControl fullWidth>
+          <Select
+            labelId="duration-select-label"
+            id="duration-select"
+            value={duration}
+            onChange={handleChange}
+            
+          >
+            <MenuItem value="all">ทั้งหมด</MenuItem>
+            <MenuItem value="week">1 สัปดาห์</MenuItem>
+            <MenuItem value="month">1 เดือน</MenuItem>
+            <MenuItem value="halfyear">6เดือน</MenuItem>
+            <MenuItem value="year">1 ปี</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box container height={750} width={"100%"}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU" }}
+          defaultCenter={{ lat: 14.475, lng: 100.523186 }}
+          defaultZoom={9}
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={({ map }) => {
+            mapRef.current = map;
+          }}
+        >
+          {
+            report.filter(crime => {
+              if (duration === "all") {
+                return true;
+              }
+              const date = new Date(crime.DateReport);
+              const now = new Date();
+              if (duration === "week") {
+                return now - date <= 7 * 24 * 60 * 60 * 1000;
+              }
+              if (duration === "month") {
+                return now - date <= 30 * 24 * 60 * 60 * 1000;
+              }
+              if (duration === "halfyear") {
+                return now - date <= 182 * 24 * 60 * 60 * 1000;
+              }
+              if (duration === "year") {
+                return now - date <= 365 * 24 * 60 * 60 * 1000;
+              }
+            }).map((crime) => (
+            <Marker
+              key={crime.id} lat={crime.Latitude} lng={crime.Longitude}>
+                <IconButton sx={{display: 'block'}} id="button" onClick={() => onMarkerClick(crime)}>
+                  <CoronavirusIcon sx={{ 
+                    color: "white", 
+                    backgroundColor: "blue", 
+                    borderRadius: "50%" 
+                  }}/>
+                </IconButton>
+              </Marker>
+          ))
+          }
+        </GoogleMapReact>
+      </Box>
+    </Box>
+
+    <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogContent>
+            <DialogTitle>ข้อมูลโรค</DialogTitle>
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              <Grid item xs={6}>
+                <TextField
+                  id="DiseaseName"
+                  label="ชื่อโรค"
+                  defaultValue={selectedReport.DiseaseName}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="ResaultPredict"
+                  label="ผลการวินิจฉัย"
+                  defaultValue={selectedReport.ResaultPredict}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="UserFname"
+                  label="ชื่อผู้รายงาน"
+                  defaultValue={selectedReport.UserFname}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="UserLname"
+                  label="นามสกุลผู้รายงาน"
+                  defaultValue={selectedReport.UserLname}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="phoneNumber"
+                  label="เบอร์โทรศัพท์"
+                  defaultValue={selectedReport.PhoneNumber}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="DateReport"
+                  label="วันที่รายงาน"
+                  defaultValue={selectedReport.DateReport}
+                  variant="filled"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </Dialog>
+
+    </React.Fragment>
+  );
+};
+
+export default SucarCaneData;
