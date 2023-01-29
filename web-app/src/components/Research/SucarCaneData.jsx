@@ -78,12 +78,11 @@ const SucarCaneData = () => {
   return (
     <React.Fragment>
       <Box
-        mt={0}
         width={"100%"}
         sx={{ justifyContent: "center", alignItems: "center" }}
       >
         <Box mt={1} width={"20%"}>
-          <InputLabel id="duration-select-label">
+          <InputLabel>
             เลือกช่วงเวลาการแสดงผล
           </InputLabel>
           <FormControl fullWidth>
