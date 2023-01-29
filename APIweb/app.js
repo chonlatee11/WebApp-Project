@@ -451,7 +451,7 @@ app.get("/DiseaseAllReport", jsonParser, function (req, res) {
       console.log(err);
     } else {
       connection.query(
-        "SELECT * FROM DiseaseReport",
+        "SELECT DS.* , Disease.colorShow FROM DiseaseReport DS LEFT JOIN Disease ON DS.DiseaseID = Disease.DiseaseID",
         [req.body.userID],
         function (err, data) {
           if (err) {
