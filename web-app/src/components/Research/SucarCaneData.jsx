@@ -101,7 +101,7 @@ const SucarCaneData = () => {
           </FormControl>
         </Box>
 
-        <Box container height={750} width={"100%"}>
+        <Box height={750} width={"100%"}>
           <GoogleMapReact
             bootstrapURLKeys={{
               key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU",

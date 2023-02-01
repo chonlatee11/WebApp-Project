@@ -130,9 +130,10 @@ const HistoryData = () => {
           >
             <Grid item xs={6}>
               <TextField
+                value={hitorySelect.InfoUpdate}
                 id="InfoDiseaseData"
                 label="ข้อมูลโรคอ้อย"
-                defaultValue={hitorySelect.InfoUpdate}
+                
                 variant="filled"
                 multiline
                 rows={5}
@@ -142,9 +143,10 @@ const HistoryData = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                value={hitorySelect.ProtectUpdate}
                 id="ProtectInfoData"
                 label="ข้อมูลการป้องกันโรคในอ้อย"
-                defaultValue={hitorySelect.ProtectUpdate}
+                
                 variant="filled"
                 multiline
                 rows={5}
@@ -154,9 +156,10 @@ const HistoryData = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                value={hitorySelect.NameUpdate}
                 id="DiseaseNameData"
                 label="ชิ่อของโรคอ้อย"
-                defaultValue={hitorySelect.NameUpdate}
+                
                 variant="filled"
                 fullWidth
                 disabled
@@ -167,7 +170,7 @@ const HistoryData = () => {
                 value={hitorySelect.NameEngUpdate}
                 id="DiseaseNameEngData"
                 label="ชิ่อภาษาอังกฤษ"
-                defaultValue={hitorySelect.NameEngUpdate}
+                
                 variant="filled"
                 fullWidth
                 disabled
