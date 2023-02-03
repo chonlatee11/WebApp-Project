@@ -19,11 +19,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 
-const baseUrl = "http://localhost:3032/getDisease";
-const baseUrlAdd = "http://localhost:3032/AddDisease";
-const baseUrlupdate = "http://localhost:3032/updateDisease";
-const baseUrlDelete = "http://localhost:3032/deleteDisease";
-const baseUrlHistory = "http://localhost:3031/HistoryDiseaseModify";
+const baseUrl = "http://127.0.0.1:3032/getDisease";
+const baseUrlAdd = "http://127.0.0.1:3032/AddDisease";
+const baseUrlupdate = "http://127.0.0.1:3032/updateDisease";
+const baseUrlDelete = "http://127.0.0.1:3032/deleteDisease";
+const baseUrlHistory = "http://127.0.0.1:3031/HistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

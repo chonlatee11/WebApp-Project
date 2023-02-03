@@ -23,7 +23,7 @@ const SucarCaneData = () => {
   const mapRef = React.useRef();
 
   //loaddata
-  const url = "http://localhost:3031/DiseaseAllReport";
+  const url = "http://127.0.0.1:3031/DiseaseAllReport";
   const [report, setReport] = React.useState([]);
   const [openDialog, setopenDialog] = React.useState(false);
   const [selectedReport, setselectedReport] = React.useState({

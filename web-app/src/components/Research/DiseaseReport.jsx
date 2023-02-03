@@ -15,7 +15,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
-const baseUrl = "http://localhost:3031/DiseaseAllReport";
+const baseUrl = "http://127.0.0.1:3031/DiseaseAllReport";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

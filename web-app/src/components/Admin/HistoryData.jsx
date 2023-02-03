@@ -16,7 +16,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
 
-const baseUrl = "http://localhost:3031/getHistoryDiseaseModify";
+const baseUrl = "http://127.0.0.1:3031/getHistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
