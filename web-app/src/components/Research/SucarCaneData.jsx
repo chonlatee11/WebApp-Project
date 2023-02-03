@@ -104,7 +104,7 @@ const SucarCaneData = () => {
         <Box height={750} width={"100%"}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU",
+              key: mykey,
             }}
             defaultCenter={{ lat: 14.475, lng: 100.523186 }}
             defaultZoom={9}
