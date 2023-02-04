@@ -93,10 +93,10 @@ const SearchDisease = () => {
                 <StyledTableCell align="center">ไม่มีข้อมูล</StyledTableCell>
               </StyledTableRow>
             ) : (
-              diseaseData.map((diseaseData) => (
+              diseaseData.map((diseaseData, index) => (
                 <StyledTableRow key={diseaseData.ReportID}>
                   <StyledTableCell component="th" scope="row">
-                    {diseaseData.ReportID}
+                    {index+1}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {diseaseData.UserFname} {diseaseData.UserLname}

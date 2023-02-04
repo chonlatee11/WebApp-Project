@@ -95,7 +95,7 @@ const SucarCaneData = () => {
               <MenuItem value="all">ทั้งหมด</MenuItem>
               <MenuItem value="week">1 สัปดาห์</MenuItem>
               <MenuItem value="month">1 เดือน</MenuItem>
-              <MenuItem value="halfyear">6เดือน</MenuItem>
+              <MenuItem value="halfyear">6 เดือน</MenuItem>
               <MenuItem value="year">1 ปี</MenuItem>
             </Select>
           </FormControl>
@@ -104,7 +104,7 @@ const SucarCaneData = () => {
         <Box height={750} width={"100%"}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: mykey,
+              key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU",
             }}
             defaultCenter={{ lat: 14.475, lng: 100.523186 }}
             defaultZoom={9}
@@ -114,11 +114,11 @@ const SucarCaneData = () => {
             }}
           >
             {report
-              .filter((crime) => {
+              .filter((diseaseReport) => {
                 if (duration === "all") {
                   return true;
                 }
-                const date = new Date(crime.DateReport);
+                const date = new Date(diseaseReport.DateReport);
                 const now = new Date();
                 if (duration === "week") {
                   return now - date <= 7 * 24 * 60 * 60 * 1000;
@@ -133,21 +133,21 @@ const SucarCaneData = () => {
                   return now - date <= 365 * 24 * 60 * 60 * 1000;
                 }
               })
-              .map((crime) => (
+              .map((diseaseReport, index) => (
                 <Marker
-                  key={crime.id}
-                  lat={crime.Latitude}
-                  lng={crime.Longitude}
+                  key={index}
+                  lat={diseaseReport.Latitude}
+                  lng={diseaseReport.Longitude}
                 >
                   <IconButton
                     sx={{ display: "block" }}
                     id="button"
-                    onClick={() => onMarkerClick(crime)}
+                    onClick={() => onMarkerClick(diseaseReport)}
                   >
                     <CoronavirusIcon
                       sx={{
                         color: "white",
-                        backgroundColor: crime.colorShow,
+                        backgroundColor: diseaseReport.colorShow,
                         borderRadius: "50%",
                       }}
                     />

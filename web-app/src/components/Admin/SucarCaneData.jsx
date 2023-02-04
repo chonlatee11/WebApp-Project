@@ -86,7 +86,7 @@ const SucarCaneData = () => {
 
   const updateHistory = (dateNow) => {
     const Admin = localStorage.getItem("User");
-    console.log(JSON.parse(Admin));
+    // console.log(JSON.parse(Admin));
     let historyUpdate = {
       DiseaseID: DiseaseSelect.DiseaseID,
       DiseaseName: DiseaseSelect.DiseaseName,
@@ -99,11 +99,11 @@ const SucarCaneData = () => {
       NameEngUpdate: DiseaseModify.DiseaseNameEng,
       ImageNameUpdate: DiseaseModify.file.name,
     };
-    console.log("updatedata = " + historyUpdate);
+    // console.log("updatedata = " + historyUpdate);
     axios.put(baseUrlHistory, historyUpdate).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       if (res.status === 200) {
-        console.log("updatehistory success");
+        // console.log("updatehistory success");
       }
     });
   };
@@ -153,9 +153,9 @@ const SucarCaneData = () => {
     formData.append("DiseaseID", DiseaseSelctID);
     formData.append("Modifydate", dateNow);
     axios.patch(baseUrlupdate, formData).then((res) => {
-      console.log(res.data.status);
+      // console.log(res.data.status);
       if (res.data.status === "success") {
-        console.log("update success");
+        // console.log("update success");
       }
     });
     setDiseaseSelect({
@@ -201,12 +201,12 @@ const SucarCaneData = () => {
     formData.append("InfoDisease", DiseaseAdd.InfoDisease);
     formData.append("ProtectInfo", DiseaseAdd.ProtectInfo);
     formData.append("DiseaseNameEng", DiseaseAdd.DiseaseNameEng);
-    console.log(DiseaseAdd);
-    console.log(formData.get("DiseaseName"));
+    // console.log(DiseaseAdd);
+    // console.log(formData.get("DiseaseName"));
     axios.put(baseUrlAdd, formData).then((res) => {
-      console.log(res.data.status);
+      // console.log(res.data.status);
       if (res.data.status === "success") {
-        console.log("add success");
+        // console.log("add success");
       }
     });
     setDiseaseAdd({
@@ -235,12 +235,13 @@ const SucarCaneData = () => {
       ProtectInfo: DiseaseSelect.ProtectInfo,
       DiseaseNameEng: DiseaseSelect.DiseaseNameEng,
       file: DiseaseSelect.ImageUrl,
+      
     });
   }, [DiseaseSelect]);
 
   function getsucarCaneData() {
     axios.get(baseUrl).then((res) => {
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setsucarCaneData(res.data.data);
     });
   }
@@ -285,13 +286,13 @@ const SucarCaneData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sucarCaneData.map((sucarCaneData) => (
+            {sucarCaneData.map((sucarCaneData, index) => (
               <StyledTableRow
                 key={sucarCaneData.DiseaseID}
                 onClick={() => onhandleSelect(sucarCaneData)}
               >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {sucarCaneData.DiseaseID}
+                  {index + 1}
                 </StyledTableCell>
                 <StyledTableCell
                   style={{ whiteSpace: "nowrap" }}
@@ -328,6 +329,9 @@ const SucarCaneData = () => {
         open={openAddSucarCaneDialog}
         onClose={handleCloseAddDiseaseDialog}
       >
+        <Box component="form"
+        onSubmit={handleSubmitDisease}
+            >
         <DialogContent>
           <DialogTitle>เพิ่มข้อมูลโรค</DialogTitle>
 
@@ -431,9 +435,10 @@ const SucarCaneData = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmitDisease}>ยืนยัน</Button>
+          <Button type="submit">ยืนยัน</Button>
           <Button onClick={handleCloseAddDiseaseDialog}>ยกเลิก</Button>
         </DialogActions>
+        </Box>
       </Dialog>
 
       <Dialog open={openUpDateDelete} onClose={handleCloseUpDateDelete}>
@@ -444,6 +449,36 @@ const SucarCaneData = () => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
+            <Grid item xs={6}>
+              <TextField
+                id="DiseaseNameData"
+                label="ชิ่อของโรคอ้อย"
+                defaultValue={DiseaseSelect.DiseaseName}
+                variant="filled"
+                fullWidth
+                onChange={(e) => {
+                  setDiseaseModify({
+                    ...DiseaseModify,
+                    DiseaseName: e.target.value,
+                  });
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="DiseaseNameEngData"
+                label="ชิ่อภาษาอังกฤษ"
+                defaultValue={DiseaseSelect.DiseaseNameEng}
+                variant="filled"
+                fullWidth
+                onChange={(e) => {
+                  setDiseaseModify({
+                    ...DiseaseModify,
+                    DiseaseNameEng: e.target.value,
+                  });
+                }}
+              />
+            </Grid>
             <Grid item xs={6}>
               <TextField
                 id="InfoDiseaseData"
@@ -478,36 +513,7 @@ const SucarCaneData = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DiseaseNameData"
-                label="ชิ่อของโรคอ้อย"
-                defaultValue={DiseaseSelect.DiseaseName}
-                variant="filled"
-                fullWidth
-                onChange={(e) => {
-                  setDiseaseModify({
-                    ...DiseaseModify,
-                    DiseaseName: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DiseaseNameEngData"
-                label="ชิ่อภาษาอังกฤษ"
-                defaultValue={DiseaseSelect.DiseaseNameEng}
-                variant="filled"
-                fullWidth
-                onChange={(e) => {
-                  setDiseaseModify({
-                    ...DiseaseModify,
-                    DiseaseNameEng: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
+            
             <Grid item xs={6}>
               <Button variant="contained" component="label">
                 รูปภาพของโรคอ้อย

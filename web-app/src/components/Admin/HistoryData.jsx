@@ -82,7 +82,7 @@ const HistoryData = () => {
 
   function getHistoryData() {
     axios.get(baseUrl).then((res) => {
-      console.log(res.data.data);
+      // console.log(res.data.data);
       sethistoryData(res.data.data);
     });
   }
@@ -101,10 +101,10 @@ const HistoryData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {historyData.map((historyData) => (
+            {historyData.map((historyData ,index) => (
               <StyledTableRow key={historyData.ReportID} onClick={() => onhandleSelect(historyData)}>
                 <StyledTableCell component="th" scope="row" align="center">
-                  {historyData.ReportID}
+                  {index +1}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {historyData.DiseaseName}
@@ -177,11 +177,14 @@ const HistoryData = () => {
               />
             </Grid>
             <Grid item xs={6}>
-               <img
-                    src={hitorySelect.ImageNameUpdate}
-                    loading="lazy"
-                    style={{ width: "550px", height: "300px" }}
-                  />
+              {
+                hitorySelect.ImageNameUpdate === "null" ? <></> : <><img
+                src={hitorySelect.ImageNameUpdate}
+                loading="lazy"
+                style={{ width: "550px", height: "300px" }}
+              /></>
+              }
+               
             </Grid>
           </Grid>
         </DialogContent>

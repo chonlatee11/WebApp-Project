@@ -91,10 +91,10 @@ const SearchFarmer = () => {
               </StyledTableCell>
             </StyledTableRow>
             ):(
-              userData.map((userData) => (
+              userData.map((userData, index) => (
                 <StyledTableRow key={userData.UserID}>
                   <StyledTableCell component="th" scope="row">
-                    {userData.UserID}
+                    {index +1 }
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {userData.fName} {userData.lName}

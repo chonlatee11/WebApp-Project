@@ -1,13 +1,15 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Container from "@mui/material/Container";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  const [userLogin, setuserLogin] = useState([]);
+  const [userLogin, setuserLogin] = useState({
+    user: localStorage.getItem("User"),
+  });
   let user = { email: "", role: "", token: "", AdminID: "" };
   const navigate = useNavigate();
-
   async function login(email, password, role) {
     if (role === "admin") {
       await axios
@@ -17,18 +19,21 @@ export const AuthProvider = ({ children }) => {
           role: role,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.status === "AdminLogin") {
             setuserLogin({
-              email: res.data.email,
-              role: role,
-              token: res.data.token,
-              AdminID: res.data.AdminID,
+              // email: res.data.email,
+              // role: role,
+              // token: res.data.token,
+              // AdminID: res.data.AdminID,
+              user: localStorage.setItem("User", JSON.stringify(res.data)),
             });
-            localStorage.setItem("User", JSON.stringify(userLogin));
+            // localStorage.setItem("User", );
             navigate("/AdminPage");
           } else {
-            navigate("/");
+            alert("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมล์หรือรหัสผ่าน");
+            location.reload();          
+            navigate("/Signin");
           }
         });
     } else if (role === "researcher") {
@@ -39,18 +44,22 @@ export const AuthProvider = ({ children }) => {
           role: role,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.status === "ResearcherLogin") {
             setuserLogin({
-              email: res.data.email,
-              role: role,
-              token: res.data.token,
-              ReseachID: res.data.ReseachID,
+              user: localStorage.setItem("User", JSON.stringify(res.data)),
             });
-            localStorage.setItem("User", JSON.stringify(userLogin));
+            // localStorage.setItem("User", JSON.stringify(userLogin));
             navigate("/ResearcherPage");
-          } else {
-            navigate("/");
+          } if (res.data.status === 401) {
+            alert("ไม่พบผู้ใช้งาน กรุณาติดต่อผู้ดูแลระบบ");
+            location.reload();          
+            navigate("/Signin");
+          }
+          if (res.data.status === 402) {
+            alert("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมล์หรือรหัสผ่าน");
+            location.reload();          
+            navigate("/Signin");
           }
         });
     }
@@ -63,11 +72,11 @@ export const AuthProvider = ({ children }) => {
     navigate("/");
   };
 
-  useEffect(() => {
-    if (userLogin) {
-      localStorage.setItem("User", JSON.stringify(userLogin));
-    }
-  }, [userLogin]);
+  // useEffect(() => {
+  //   if (userLogin) {
+  //     localStorage.setItem("User", JSON.stringify(userLogin));
+  //   }
+  // }, [userLogin]);
 
   return (
     <AuthContext.Provider value={{ userLogin, login, logout }}>

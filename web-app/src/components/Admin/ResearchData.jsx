@@ -105,13 +105,13 @@ const ResearchData = () => {
         email: researchSelectEmail,
       })
       .then((response) => {
-        console.log(response.status);
+        // console.log(response.status);
         <Alert severity="success">
           This is a success alert — check it out!
         </Alert>;
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
     setresearchSelect({
       fname: "",
@@ -174,13 +174,13 @@ const ResearchData = () => {
 
   const handleSubmitResearch = () => {
     axios.put(baseUrlAdd, researchAdd).then((res) => {
-      console.log(res.data.status);
+      // console.log(res.data.status);
       if (res.data.status === "success") {
       }
     });
     // add Research
-    console.log("submit");
-    console.log(researchAdd);
+    // console.log("submit");
+    // console.log(researchAdd);
     setresearchAdd({
       fname: "",
       lname: "",
@@ -212,7 +212,7 @@ const ResearchData = () => {
 
   function getresearchData() {
     axios.get(baseUrl).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setresearchData(res.data.data);
     });
   }
@@ -253,13 +253,13 @@ const ResearchData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {researchData.map((researchData) => (
+            {researchData.map((researchData, index) => (
               <StyledTableRow
                 key={researchData.researcherID}
                 onClick={() => onhandleSelect(researchData)}
               >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {researchData.researcherID}
+                  {index + 1}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {researchData.fName} {researchData.lName}
@@ -283,111 +283,114 @@ const ResearchData = () => {
         open={openAddResearchDialog}
         onClose={handleCloseAddResearchDialog}
       >
-        <DialogContent>
-          <DialogTitle>เพิ่มนักวิจัย</DialogTitle>
+        <Box component="form" onSubmit={handleSubmitResearch}>
+          <DialogContent>
+            <DialogTitle>เพิ่มนักวิจัย</DialogTitle>
 
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid item xs={6}>
-              <TextField
-                value={researchAdd.fname}
-                id="fname"
-                label="ชื่อ"
-                variant="filled"
-                required
-                fullWidth
-                name="fname"
-                autoFocus
-                onChange={(e) => {
-                  setresearchAdd({
-                    ...researchAdd,
-                    fname: e.target.value,
-                  });
-                }}
-              />
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              <Grid item xs={6}>
+                <TextField
+                  value={researchAdd.fname}
+                  id="fname"
+                  label="ชื่อ"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="fname"
+                  autoFocus
+                  onChange={(e) => {
+                    setresearchAdd({
+                      ...researchAdd,
+                      fname: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={researchAdd.lname}
+                  id="lname"
+                  label="นามสกุล"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="lname"
+                  autoFocus
+                  onChange={(e) => {
+                    setresearchAdd({
+                      ...researchAdd,
+                      lname: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={researchAdd.email}
+                  id="email"
+                  label="อีเมล"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="email"
+                  type={"email"}
+                  autoFocus
+                  onChange={(e) => {
+                    setresearchAdd({
+                      ...researchAdd,
+                      email: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={researchAdd.password}
+                  id="password"
+                  label="รหัสผ่าน"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="password"
+                  autoFocus
+                  type={"password"}
+                  onChange={(e) => {
+                    setresearchAdd({
+                      ...researchAdd,
+                      password: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={researchAdd.phoneNumber}
+                  id="phoneNumber"
+                  label="เบอร์โทรศัพท์"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  autoFocus
+                  onChange={(e) => {
+                    setresearchAdd({
+                      ...researchAdd,
+                      phoneNumber: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={researchAdd.lname}
-                id="lname"
-                label="นามสกุล"
-                variant="filled"
-                required
-                fullWidth
-                name="lname"
-                autoFocus
-                onChange={(e) => {
-                  setresearchAdd({
-                    ...researchAdd,
-                    lname: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={researchAdd.email}
-                id="email"
-                label="อีเมล"
-                variant="filled"
-                required
-                fullWidth
-                name="email"
-                autoFocus
-                onChange={(e) => {
-                  setresearchAdd({
-                    ...researchAdd,
-                    email: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={researchAdd.password}
-                id="password"
-                label="รหัสผ่าน"
-                variant="filled"
-                required
-                fullWidth
-                name="password"
-                autoFocus
-                type={"password"}
-                onChange={(e) => {
-                  setresearchAdd({
-                    ...researchAdd,
-                    password: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={researchAdd.phoneNumber}
-                id="phoneNumber"
-                label="เบอร์โทรศัพท์"
-                variant="filled"
-                required
-                fullWidth
-                name="phoneNumber"
-                autoFocus
-                onChange={(e) => {
-                  setresearchAdd({
-                    ...researchAdd,
-                    phoneNumber: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmitResearch}>ยืนยัน</Button>
-          <Button onClick={handleCloseAddResearchDialog}>ยกเลิก</Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button type="submit">ยืนยัน</Button>
+            <Button onClick={handleCloseAddResearchDialog}>ยกเลิก</Button>
+          </DialogActions>
+        </Box>
       </Dialog>
 
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>

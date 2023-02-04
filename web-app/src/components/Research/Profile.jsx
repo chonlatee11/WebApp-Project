@@ -9,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import EmailIcon from "@mui/icons-material/Email";
+import Icon from "@mui/material/Icon";
 
 const baseUrl = "http://127.0.0.1:3031/getSelectResearch";
 const baseUrlupdate = "http://127.0.0.1:3031/updataSelectResearch";
@@ -61,7 +63,7 @@ const Profile = () => {
       })
       .then((res) => {
         if (res.data.status === "success") {
-          console.log("update success");
+          // console.log("update success");
         }
       });
     setresearchSelect({
@@ -133,95 +135,142 @@ const Profile = () => {
 
   return (
     <React.Fragment>
-      <Grid container width={"100%"} justifyContent={"flex-end"}>
-        <Box container height={500} width={"100%"} component={"form"}>
+      <Grid width={"100%"} justifyContent={"flex-end"}>
+        <Box height={500} width={"100%"}>
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            <Grid item xs={6}>
-              <TextField
-                value={research.fName}
-                id="fName"
-                variant="filled"
-                label="ชื่อ"
-                fullWidth
-                name="fName"
-                autoFocus
-                disabled
-              />
+            <Grid item xs={4}>
+              <label>
+                ชื่อ
+              </label>
+              <Box
+                component="span"
+                sx={{
+                  display: "block",
+                  p: 1,
+                  m: 0,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#101010" : "#fff",
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "700",
+                }}
+              >
+                {research.fName}
+              </Box>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={research.lName}
-                id="lName"
-                variant="filled"
-                label="นามสกุล"
-                required
-                fullWidth
-                name="lName"
-                autoFocus
-                disabled
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                value={research.Email}
-                label="อีเมล"
-                id="Email"
-                variant="filled"
-                required
-                fullWidth
-                name="Email"
-                autoFocus
-                disabled
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                value={research.passWord}
-                id="passWord"
-                variant="filled"
-                label="รหัสผ่าน"
-                required
-                fullWidth
-                name="passWord"
-                autoFocus
-                type={"password"}
-                disabled
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={research.phoneNumber}
-                label="เบอร์โทรศัพท์"
-                id="phoneNumber"
-                variant="filled"
-                required
-                fullWidth
-                name="phoneNumber"
-                autoFocus
-                disabled
-              />
+            <Grid item xs={4}>
+              <label>
+                นามสกุล
+              </label>
+              <Box
+                component="span"
+                sx={{
+                  display: "block",
+                  p: 1,
+                  m: 0,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#101010" : "#fff",
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "700",
+                }}
+              >
+                {research.lName}
+              </Box>
             </Grid>
 
-            <Grid item xs={6}>
-              <TextField
-                value={research.Modifydate}
-                id="Modifydate"
-                variant="filled"
-                label="วันที่แก้ไขล่าสุด"
-                required
-                fullWidth
-                name="Modifydate"
-                autoFocus
-                disabled
-                
-              />
+            <Grid item xs={4}>
+              <label>
+                อีเมล
+              </label>
+              <Box
+                component="span"
+                sx={{
+                  display: "block",
+                  p: 1,
+                  m: 0,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#101010" : "#fff",
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "700",
+                }}
+              >
+                {research.Email}
+              </Box>
             </Grid>
+
+            <Grid item xs={4}>
+              <label>
+                เบอร์โทรศัพท์
+              </label>
+              <Box
+                component="span"
+                sx={{
+                  display: "block",
+                  p: 1,
+                  m: 0,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#101010" : "#fff",
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "700",
+                }}
+              >
+                {research.phoneNumber}
+              </Box>
+            </Grid>
+            <Grid item xs={4}>
+              <label>
+                วันที่แก้ไขข้อมูลล่าสุด
+              </label>
+              <Box
+                component="span"
+                sx={{
+                  display: "block",
+                  p: 1,
+                  m: 0,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#101010" : "#fff",
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                  borderRadius: 2,
+                  fontSize: "1rem",
+                  fontWeight: "700",
+                }}
+              >
+                {research.Modifydate}
+              </Box>
+              
+            </Grid>
+            
             <Grid item xs={6}>
               <Button variant="contained" onClick={() => handleModify()}>
                 แก้ไข
@@ -229,10 +278,12 @@ const Profile = () => {
             </Grid>
           </Grid>
         </Box>
+      </Grid>
 
-        <Dialog open={openUpDateDelete} onClose={handleCloseUpDateDelete}>
+      <Dialog open={openUpDateDelete} onClose={handleCloseUpDateDelete}>
+        <Box component="form" onSubmit={handleConfirmModify}>
           <DialogContent>
-            <DialogTitle>ข้อมูลโรค</DialogTitle>
+            <DialogTitle>ข้อมูลนักวิจัย</DialogTitle>
             <Grid
               container
               rowSpacing={1}
@@ -275,6 +326,7 @@ const Profile = () => {
                   defaultValue={researchSelect.Email}
                   variant="filled"
                   fullWidth
+                  type={"email"}
                   onChange={(e) => {
                     setresearchModify({
                       ...researchModify,
@@ -340,7 +392,7 @@ const Profile = () => {
             <DialogTitle>{"ยืนยันการแก้ไข"}</DialogTitle>
             <DialogContent>
               <DialogContentText id="ConFirmDelete Desecription">
-                คุณต้องการแก้ไขข้อมูลโรคอ้อยใช่หรือไม่
+                คุณต้องการแก้ไขข้อมูลส่วนตัวใช่หรือไม่
                 หากแก้ไขแล้วจะเปลี่ยนแปลงทันที
               </DialogContentText>
             </DialogContent>
@@ -349,8 +401,8 @@ const Profile = () => {
               <Button onClick={handleConfirmModify}>ยืนยัน</Button>
             </DialogActions>
           </Dialog>
-        </Dialog>
-      </Grid>
+        </Box>
+      </Dialog>
     </React.Fragment>
   );
 };

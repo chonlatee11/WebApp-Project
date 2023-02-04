@@ -103,13 +103,13 @@ const AdminData = () => {
         email: adminSelectEmail,
       })
       .then((response) => {
-        console.log(response.status);
+        // console.log(response.status);
         <Alert severity="success">
           This is a success alert — check it out!
         </Alert>;
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
     setAdminSelect({
       fname: "",
@@ -166,7 +166,7 @@ const AdminData = () => {
 
   const handleSubmitAddAdmin = () => {
     axios.put(baseUrlAdd, adminAdd).then((res) => {
-      console.log(res.data.status);
+      // console.log(res.data.status);
       if (res.data.status === "success") {
         <Alert severity="success">
           This is a success alert — check it out!
@@ -174,8 +174,8 @@ const AdminData = () => {
       }
     });
     // add Admin
-    console.log("submit");
-    console.log(adminAdd);
+    // console.log("submit");
+    // console.log(adminAdd);
     setAdminAdd({
       fname: "",
       lname: "",
@@ -205,7 +205,7 @@ const AdminData = () => {
 
   function getAdminData() {
     axios.get(baseUrl).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setAdminData(res.data.data);
     });
   }
@@ -244,13 +244,13 @@ const AdminData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminData.map((adminData) => (
+            {adminData.map((adminData, index) => (
               <StyledTableRow
                 key={adminData.adminID}
                 onClick={() => onhandleSelect(adminData)}
               >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {adminData.adminID}
+                  {index+1}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {adminData.fName} {adminData.lName}
@@ -268,9 +268,11 @@ const AdminData = () => {
       </TableContainer>
 
       <Dialog open={openAddAdminDialog} onClose={handleCloseAddAdminDialog}>
+      <Box component="form"
+        onSubmit={handleSubmitAddAdmin}
+            >
         <DialogContent>
-          <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>
-
+          <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>      
           <Grid
             container
             rowSpacing={1}
@@ -319,6 +321,7 @@ const AdminData = () => {
                 label="อีเมล"
                 variant="filled"
                 required
+                type={"email"}
                 fullWidth
                 name="email"
                 autoFocus
@@ -336,9 +339,10 @@ const AdminData = () => {
                 id="password"
                 label="รหัสผ่าน"
                 variant="filled"
-                required
+                required = {true}
                 fullWidth
                 name="password"
+                type={"password"}
                 autoFocus
                 onChange={(e) => {
                   setAdminAdd({
@@ -351,9 +355,10 @@ const AdminData = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmitAddAdmin}>ยืนยัน</Button>
+          <Button type="submit" >ยืนยัน</Button>
           <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
         </DialogActions>
+        </Box>
       </Dialog>
 
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>

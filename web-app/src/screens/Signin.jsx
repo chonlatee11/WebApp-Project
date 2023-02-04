@@ -27,6 +27,9 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
+      
+    
+    
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -59,6 +62,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              type={"email"}
             />
             <TextField
               margin="normal"
@@ -102,5 +106,6 @@ export default function SignIn() {
         </Box>
       </Container>
     </ThemeProvider>
+    
   );
 }

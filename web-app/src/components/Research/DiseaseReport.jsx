@@ -81,7 +81,7 @@ const DiseaseReport = () => {
 
   function getreportData() {
     axios.get(baseUrl).then((res) => {
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setreportData(res.data.data);
     });
   }
@@ -98,12 +98,12 @@ const DiseaseReport = () => {
               <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
               <StyledTableCell align="center">ที่อยู่</StyledTableCell>
               <StyledTableCell align="center">โรคที่รายงาน</StyledTableCell>
-              <StyledTableCell align="center">ผลของการจำแนกโรค</StyledTableCell>
+
               <StyledTableCell align="center">วันที่รายงาน</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {reportData.map((reportData) => (
+            {reportData.map((reportData, index) => (
               <StyledTableRow
                 key={reportData.ReportID}
                 onClick={() => onhandleSelect(reportData)}
@@ -123,9 +123,7 @@ const DiseaseReport = () => {
                 <StyledTableCell align="center">
                   {reportData.DiseaseName}
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {reportData.ResaultPredict}
-                </StyledTableCell>
+
                 <StyledTableCell align="center">
                   {reportData.DateReport}
                 </StyledTableCell>
