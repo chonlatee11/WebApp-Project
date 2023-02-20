@@ -23,7 +23,7 @@ const SucarCaneData = () => {
   const mapRef = React.useRef();
 
   //loaddata
-  const url = "http://127.0.0.1:3031/DiseaseAllReport";
+  const url = "http://127.0.0.1:3000/DiseaseAllReport";
   const [report, setReport] = React.useState([]);
   const [openDialog, setopenDialog] = React.useState(false);
   const [selectedReport, setselectedReport] = React.useState({
@@ -104,7 +104,7 @@ const SucarCaneData = () => {
         <Box height={750} width={"100%"}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "mykey",
+              key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU",
             }}
             defaultCenter={{ lat: 14.475, lng: 100.523186 }}
             defaultZoom={9}
