@@ -15,7 +15,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
-const baseUrl = "http://127.0.0.1:3000/DiseaseAllReport";
+const baseUrl = "http://127.0.0.1:3002/DiseaseAllReport";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -109,7 +109,7 @@ const DiseaseReport = () => {
                 onClick={() => onhandleSelect(reportData)}
               >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {reportData.ReportID}
+                  {index}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {reportData.UserFname} {reportData.UserLname}
