@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [userLogin, setuserLogin] = useState({
     user: localStorage.getItem("User"),
   });
-  let user = { email: "", role: "", token: "", AdminID: "" };
+  let user = { email: "", role: "", token: "", AdminID: "", emailVerify: "" };
   const navigate = useNavigate();
   async function login(email, password, role) {
     if (role === "admin") {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         })
         .then((res) => {
           // console.log(res.data);
-          if (res.data.status === "AdminLogin") {
+          if (res.data.status === "AdminLogin" && res.data.emailVerify === "Verify") {
             setuserLogin({
               // email: res.data.email,
               // role: role,
@@ -29,7 +29,13 @@ export const AuthProvider = ({ children }) => {
             });
             // localStorage.setItem("User", );
             navigate("/AdminPage");
-          } else {
+          }
+          else if (res.data.emailVerify === "notVerify") {
+            alert("กรุณายืนยันอีเมล์ก่อนเข้าสู่ระบบ");
+            location.reload();          
+            navigate("/Signin");
+          }
+          else {
             alert("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมล์หรือรหัสผ่าน");
             location.reload();          
             navigate("/Signin");
@@ -44,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         })
         .then((res) => {
           // console.log(res.data);
-          if (res.data.status === "ResearcherLogin") {
+          if (res.data.status === "ResearcherLogin" && res.data.emailVerify === "Verify") {
             setuserLogin({
               user: localStorage.setItem("User", JSON.stringify(res.data)),
             });
@@ -52,6 +58,11 @@ export const AuthProvider = ({ children }) => {
             navigate("/ResearcherPage");
           } if (res.data.status === 401) {
             alert("ไม่พบผู้ใช้งาน กรุณาติดต่อผู้ดูแลระบบ");
+            location.reload();          
+            navigate("/Signin");
+          }
+          else if (res.data.emailVerify === "notVerify") {
+            alert("กรุณายืนยันอีเมล์ก่อนเข้าสู่ระบบ");
             location.reload();          
             navigate("/Signin");
           }

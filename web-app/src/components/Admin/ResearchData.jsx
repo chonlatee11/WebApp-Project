@@ -23,6 +23,7 @@ const baseUrl = "http://127.0.0.1:3000/getResearch";
 const baseUrlAdd = "http://127.0.0.1:3000/AddResearch";
 const baseUrlupdate = "http://127.0.0.1:3000/updateResearch";
 const baseUrlDelete = "http://127.0.0.1:3000/deleteResearch";
+const baseUrlSendEmail = "http://127.0.0.1:3000/send-email/research";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -59,6 +60,9 @@ const ResearchData = () => {
   const [conFirmDelete, setConfirmDelete] = React.useState(false);
   const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
   const [conFirmModify, setConfirmModify] = React.useState(false);
+  const [openAlertMod, setOpenAlertMod] = React.useState(false);
+  const [openAlertAdd, setOpenAlertAdd] = React.useState(false);
+  const [openAleartDel, setOpenAleartDel] = React.useState(false);
 
   const handleCloseConfirmDeleteDialog = () => {
     setConfirmDeleteDialog(false);
@@ -70,8 +74,9 @@ const ResearchData = () => {
     axios
       .delete(baseUrlDelete, { data: { email: researchSelect.email } })
       .catch((error) => {
-        <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
+        
       });
+      openAleartdel();
     setresearchSelect({
       fname: "",
       lname: "",
@@ -94,6 +99,14 @@ const ResearchData = () => {
     let date = new Date();
     let dateNow = date.toLocaleDateString();
     let researchSelectEmail = researchSelect.email;
+    let EmailVerify = "Verify";
+
+    if (researchSelectEmail !== researchModify.email) {
+      EmailVerify = "notVerify";
+      axios.post(baseUrlSendEmail, {email: researchModify.email}).then((res) => {
+        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+      });
+    }
 
     axios
       .patch(baseUrlupdate, {
@@ -102,13 +115,12 @@ const ResearchData = () => {
         emailupdate: researchModify.email,
         password: researchModify.password,
         modifydate: dateNow,
+        EmailVerify: EmailVerify,
         email: researchSelectEmail,
       })
       .then((response) => {
         // console.log(response.status);
-        <Alert severity="success">
-          This is a success alert — check it out!
-        </Alert>;
+        openAlertModSuccess();
       })
       .catch((error) => {
         // console.log(error);
@@ -176,8 +188,14 @@ const ResearchData = () => {
     axios.put(baseUrlAdd, researchAdd).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
+        openAlertAddSuccess();
       }
     });
+    
+    axios.post(baseUrlSendEmail, {email: researchAdd.email}).then((res) => {
+      //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+    });
+
     // add Research
     // console.log("submit");
     // console.log(researchAdd);
@@ -229,8 +247,38 @@ const ResearchData = () => {
     handleClickOpenUpDateDelete();
   };
 
+  function openAlertModSuccess() {
+    setOpenAlertMod(true);
+    setTimeout(() => {
+      setOpenAlertMod(false);
+    }, 2000);
+  }
+
+  function openAlertAddSuccess() {
+    setOpenAlertAdd(true);
+    setTimeout(() => {
+      setOpenAlertAdd(false);
+    }, 2000);
+  }
+
+  function openAleartdel() {
+    setOpenAleartDel(true);
+    setTimeout(() => {
+      setOpenAleartDel(false);
+    }, 2000);
+  }
+
   return (
     <React.Fragment>
+      {openAlertMod && (
+        <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>
+      )}
+      {openAlertAdd && (
+        <Alert severity="success">เพิ่มนักวิจัยสำเร็จ</Alert>
+      )}
+      {openAleartDel && (
+        <Alert severity="success">ลบนักวิจัยสำเร็จ</Alert>
+      )}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"
@@ -376,6 +424,7 @@ const ResearchData = () => {
                   fullWidth
                   name="phoneNumber"
                   autoFocus
+                  inputProps={{ pattern: "[0-9]{10}" }}
                   onChange={(e) => {
                     setresearchAdd({
                       ...researchAdd,

@@ -23,6 +23,7 @@ const baseUrl = "http://127.0.0.1:3000/getAdmin";
 const baseUrlAdd = "http://127.0.0.1:3000/AddAdmin";
 const baseUrlupdate = "http://127.0.0.1:3000/updateAdmin";
 const baseUrlDelete = "http://127.0.0.1:3000/deleteAdmin";
+const baseUrlSendEmail = "http://127.0.0.1:3000/send-email/admin";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -51,6 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AdminData = () => {
+  const adminLogin = localStorage.getItem("User");
   const [adminData, setAdminData] = React.useState([]);
   const [openAddAdminDialog, setOpenAddAdminDialog] = React.useState(false);
   const [openUpDateDelet, setOpenUpDateDelete] = React.useState(false);
@@ -58,6 +60,9 @@ const AdminData = () => {
   const [conFirmDelete, setConfirmDelete] = React.useState(false);
   const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
   const [conFirmModify, setConfirmModify] = React.useState(false);
+  const [openAlertMod, setOpenAlertMod] = React.useState(false);
+  const [openAlertAdd, setOpenAlertAdd] = React.useState(false);
+  const [openAleartDel, setOpenAleartDel] = React.useState(false);
 
   const handleCloseConfirmDeleteDialog = () => {
     setConfirmDeleteDialog(false);
@@ -71,6 +76,7 @@ const AdminData = () => {
       .catch((error) => {
         <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
       });
+      openAleartDelSuccess();
     setAdminSelect({
       fname: "",
       lname: "",
@@ -92,6 +98,14 @@ const AdminData = () => {
     let date = new Date();
     let dateNow = date.toLocaleDateString();
     let adminSelectEmail = adminSelect.email;
+    let EmailVerify = "Verify";
+
+    if (adminSelectEmail !== Adminmodify.email) {
+      EmailVerify = "notVerify";
+      axios.post(baseUrlSendEmail, {email: Adminmodify.email}).then((res) => {
+        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+      });
+    }
 
     axios
       .patch(baseUrlupdate, {
@@ -101,16 +115,16 @@ const AdminData = () => {
         password: Adminmodify.password,
         modifydate: dateNow,
         email: adminSelectEmail,
+        EmailVerify: EmailVerify
       })
       .then((response) => {
         // console.log(response.status);
-        <Alert severity="success">
-          This is a success alert — check it out!
-        </Alert>;
+        openAlertModSuccess();
       })
       .catch((error) => {
         // console.log(error);
       });
+   
     setAdminSelect({
       fname: "",
       lname: "",
@@ -168,10 +182,11 @@ const AdminData = () => {
     axios.put(baseUrlAdd, adminAdd).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
-        <Alert severity="success">
-          This is a success alert — check it out!
-        </Alert>;
+        openAlertAdd();
       }
+    });
+    axios.post(baseUrlSendEmail, {email: adminAdd.email}).then((res) => {
+      //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
     });
     // add Admin
     // console.log("submit");
@@ -221,8 +236,38 @@ const AdminData = () => {
     handleClickOpenUpDateDelete();
   };
 
+  function openAlertModSuccess() {
+    setOpenAlertMod(true);
+    setTimeout(() => {
+      setOpenAlertMod(false);
+    }, 2000);
+  }
+
+  function openAlertAddSuccess() {
+    setOpenAlertAdd(true);
+    setTimeout(() => {
+      setOpenAlertAdd(false);
+    }, 2000);
+  }
+
+  function openAleartDelSuccess() {
+    setOpenAleartDel(true);
+    setTimeout(() => {
+      setOpenAleartDel(false);
+    }, 2000);
+  }
+
   return (
     <React.Fragment>
+      {openAlertMod && (
+        <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>
+      )}
+      {openAlertAdd && (
+        <Alert severity="success">เพิ่มผู้ดูแลระบบสำเร็จ</Alert>
+      )}
+      {openAleartDel && (
+        <Alert severity="success">ลบผู้ดูแลระบบสำเร็จ</Alert>
+      )}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"
@@ -244,8 +289,12 @@ const AdminData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminData.map((adminData, index) => (
-              <StyledTableRow
+          
+            {
+              adminData.filter((adminData) => {
+                return adminData.Email !== JSON.parse(adminLogin).email && adminData.Email !== "admin";
+              }).map((adminData, index) => (
+                <StyledTableRow
                 key={adminData.adminID}
                 onClick={() => onhandleSelect(adminData)}
               >
@@ -262,7 +311,8 @@ const AdminData = () => {
                   {adminData.modifydate}
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>
