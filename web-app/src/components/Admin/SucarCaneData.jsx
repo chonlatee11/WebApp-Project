@@ -18,12 +18,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-
-const baseUrl = "http://127.0.0.1:3002/getDisease";
-const baseUrlAdd = "http://127.0.0.1:3002/AddDisease";
-const baseUrlupdate = "http://127.0.0.1:3002/updateDisease";
-const baseUrlDelete = "http://127.0.0.1:3002/deleteDisease";
-const baseUrlHistory = "http://127.0.0.1:3000/HistoryDiseaseModify";
+import {
+  getDisease_API_URL,
+  addDisease_API_URL,
+  updateDisease_API_URL,
+  deleteDisease_API_URL,
+  historyDiseaseModify_API_URL,
+} from "../API/config/api.config";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -100,7 +101,7 @@ const SucarCaneData = () => {
       ImageNameUpdate: DiseaseModify.file.name,
     };
     // console.log("updatedata = " + historyUpdate);
-    axios.put(baseUrlHistory, historyUpdate).then((res) => {
+    axios.put(historyDiseaseModify_API_URL, historyUpdate).then((res) => {
       // console.log(res.data);
       if (res.status === 200) {
         // console.log("updatehistory success");
@@ -116,7 +117,9 @@ const SucarCaneData = () => {
     setConfirmDelete(true);
     // delete Research
     axios
-      .delete(baseUrlDelete, { data: { DiseaseID: DiseaseSelect.DiseaseID } })
+      .delete(deleteDisease_API_URL, {
+        data: { DiseaseID: DiseaseSelect.DiseaseID },
+      })
       .catch((error) => {
         <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
       });
@@ -152,7 +155,7 @@ const SucarCaneData = () => {
     formData.append("DiseaseNameEng", DiseaseModify.DiseaseNameEng);
     formData.append("DiseaseID", DiseaseSelctID);
     formData.append("Modifydate", dateNow);
-    axios.patch(baseUrlupdate, formData).then((res) => {
+    axios.patch(updateDisease_API_URL, formData).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
         // console.log("update success");
@@ -203,7 +206,7 @@ const SucarCaneData = () => {
     formData.append("DiseaseNameEng", DiseaseAdd.DiseaseNameEng);
     // console.log(DiseaseAdd);
     // console.log(formData.get("DiseaseName"));
-    axios.put(baseUrlAdd, formData).then((res) => {
+    axios.put(addDisease_API_URL, formData).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
         // console.log("add success");
@@ -235,12 +238,11 @@ const SucarCaneData = () => {
       ProtectInfo: DiseaseSelect.ProtectInfo,
       DiseaseNameEng: DiseaseSelect.DiseaseNameEng,
       file: DiseaseSelect.ImageUrl,
-      
     });
   }, [DiseaseSelect]);
 
   function getsucarCaneData() {
-    axios.get(baseUrl).then((res) => {
+    axios.get(getDisease_API_URL).then((res) => {
       // console.log(res.data.data);
       setsucarCaneData(res.data.data);
     });
@@ -329,115 +331,113 @@ const SucarCaneData = () => {
         open={openAddSucarCaneDialog}
         onClose={handleCloseAddDiseaseDialog}
       >
-        <Box component="form"
-        onSubmit={handleSubmitDisease}
+        <Box component="form" onSubmit={handleSubmitDisease}>
+          <DialogContent>
+            <DialogTitle>เพิ่มข้อมูลโรค</DialogTitle>
+
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
-        <DialogContent>
-          <DialogTitle>เพิ่มข้อมูลโรค</DialogTitle>
-
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid item xs={6}>
-              <TextField
-                value={DiseaseAdd.InfoDisease}
-                id="InfoDisease"
-                label="รายละเอียดข้อมูลโรคอ้อย"
-                variant="filled"
-                required
-                fullWidth
-                multiline
-                name="InfoDisease"
-                autoFocus
-                onChange={(e) => {
-                  setDiseaseAdd({
-                    ...DiseaseAdd,
-                    InfoDisease: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={DiseaseAdd.ProtectInfo}
-                id="ProtectInfo"
-                label="ข้อมูลการป้องกันโรคในอ้อย"
-                variant="filled"
-                required
-                fullWidth
-                multiline
-                name="ProtectInfo"
-                autoFocus
-                onChange={(e) => {
-                  setDiseaseAdd({
-                    ...DiseaseAdd,
-                    ProtectInfo: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                value={DiseaseAdd.DiseaseName}
-                id="DiseaseName"
-                label="ชิ่อของโรคอ้อย"
-                variant="filled"
-                required
-                fullWidth
-                name="DiseaseName"
-                autoFocus
-                onChange={(e) => {
-                  setDiseaseAdd({
-                    ...DiseaseAdd,
-                    DiseaseName: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                value={DiseaseAdd.DiseaseNameEng}
-                id="DiseaseNameEng"
-                label="ชื่อภาษาอังกฤษ"
-                variant="filled"
-                required
-                fullWidth
-                name="DiseaseNameEng"
-                autoFocus
-                onChange={(e) => {
-                  setDiseaseAdd({
-                    ...DiseaseAdd,
-                    DiseaseNameEng: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Button variant="contained" component="label">
-                รูปภาพของโรคอ้อย
-                <input
-                  hidden
-                  accept="image/png, image/jpeg"
-                  type="file"
+              <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.InfoDisease}
+                  id="InfoDisease"
+                  label="รายละเอียดข้อมูลโรคอ้อย"
+                  variant="filled"
+                  required
+                  fullWidth
+                  multiline
+                  name="InfoDisease"
+                  autoFocus
                   onChange={(e) => {
                     setDiseaseAdd({
                       ...DiseaseAdd,
-                      file: e.target.files[0],
+                      InfoDisease: e.target.value,
                     });
                   }}
                 />
-              </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.ProtectInfo}
+                  id="ProtectInfo"
+                  label="ข้อมูลการป้องกันโรคในอ้อย"
+                  variant="filled"
+                  required
+                  fullWidth
+                  multiline
+                  name="ProtectInfo"
+                  autoFocus
+                  onChange={(e) => {
+                    setDiseaseAdd({
+                      ...DiseaseAdd,
+                      ProtectInfo: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.DiseaseName}
+                  id="DiseaseName"
+                  label="ชิ่อของโรคอ้อย"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="DiseaseName"
+                  autoFocus
+                  onChange={(e) => {
+                    setDiseaseAdd({
+                      ...DiseaseAdd,
+                      DiseaseName: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.DiseaseNameEng}
+                  id="DiseaseNameEng"
+                  label="ชื่อภาษาอังกฤษ"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="DiseaseNameEng"
+                  autoFocus
+                  onChange={(e) => {
+                    setDiseaseAdd({
+                      ...DiseaseAdd,
+                      DiseaseNameEng: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" component="label">
+                  รูปภาพของโรคอ้อย
+                  <input
+                    hidden
+                    accept="image/png, image/jpeg"
+                    type="file"
+                    onChange={(e) => {
+                      setDiseaseAdd({
+                        ...DiseaseAdd,
+                        file: e.target.files[0],
+                      });
+                    }}
+                  />
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button type="submit">ยืนยัน</Button>
-          <Button onClick={handleCloseAddDiseaseDialog}>ยกเลิก</Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button type="submit">ยืนยัน</Button>
+            <Button onClick={handleCloseAddDiseaseDialog}>ยกเลิก</Button>
+          </DialogActions>
         </Box>
       </Dialog>
 
@@ -513,7 +513,7 @@ const SucarCaneData = () => {
                 }}
               />
             </Grid>
-            
+
             <Grid item xs={6}>
               <Button variant="contained" component="label">
                 รูปภาพของโรคอ้อย

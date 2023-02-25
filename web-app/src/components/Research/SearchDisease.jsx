@@ -12,8 +12,7 @@ import TextField from "@mui/material/TextField";
 import { Grid, Box } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-
-const baseUrl = "http://127.0.0.1:3000/getSelectDesease";
+import { getSelectDesease_API_URL } from "../API/config/api.config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,7 +40,7 @@ const SearchDisease = () => {
   });
 
   function getdiseaseSearch() {
-    axios.post(baseUrl, diseaseSearch).then((res) => {
+    axios.post(getSelectDesease_API_URL, diseaseSearch).then((res) => {
       setdiseaseData(res.data.data);
     });
   }
@@ -96,7 +95,7 @@ const SearchDisease = () => {
               diseaseData.map((diseaseData, index) => (
                 <StyledTableRow key={diseaseData.ReportID}>
                   <StyledTableCell component="th" scope="row">
-                    {index+1}
+                    {index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {diseaseData.UserFname} {diseaseData.UserLname}

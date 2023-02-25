@@ -5,6 +5,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
@@ -14,8 +15,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-
-const baseUrl = "http://127.0.0.1:3002/DiseaseAllReport";
+import { diseaseReport_API_URL } from "../API/config/api.config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,6 +52,28 @@ const DiseaseReport = () => {
     ImageUrl: "",
     AddressUser: "",
   });
+  const [sortConfig, setSortConfig] = React.useState({
+    key: "DateReport",
+    direction: "desc",
+  });
+
+  const onhandleSelectSort = (historyData) => {
+    const newSortConfig = {
+      key: "DateReport",
+      direction: sortConfig.direction === "desc" ? "asc" : "desc",
+    };
+    setSortConfig(newSortConfig);
+  };
+
+  const sortedData = reportData.sort((a, b) => {
+    if (new Date(a[sortConfig.key]) < new Date(b[sortConfig.key])) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (new Date(a[sortConfig.key]) > new Date(b[sortConfig.key])) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
 
   React.useEffect(() => {
     getreportData();
@@ -80,7 +102,7 @@ const DiseaseReport = () => {
   };
 
   function getreportData() {
-    axios.get(baseUrl).then((res) => {
+    axios.get(diseaseReport_API_URL).then((res) => {
       // console.log(res.data.data);
       setreportData(res.data.data);
     });
@@ -98,18 +120,38 @@ const DiseaseReport = () => {
               <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
               <StyledTableCell align="center">ที่อยู่</StyledTableCell>
               <StyledTableCell align="center">โรคที่รายงาน</StyledTableCell>
-
-              <StyledTableCell align="center">วันที่รายงาน</StyledTableCell>
+              <StyledTableCell align="center">
+                วันที่รายงาน
+                <TableSortLabel
+                  active={sortConfig.key === "DateReport"}
+                  direction={sortConfig.direction}
+                  onClick={() => onhandleSelectSort("DateReport")}
+                  sx={{
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
+                    },
+                    "&.MuiTableSortLabel-root:hover": {
+                      color: "white",
+                    },
+                    "&.Mui-active": {
+                      color: "white",
+                    },
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
+                    },
+                  }}
+                ></TableSortLabel>
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {reportData.map((reportData, index) => (
+            {sortedData.map((reportData, index) => (
               <StyledTableRow
                 key={reportData.ReportID}
                 onClick={() => onhandleSelect(reportData)}
               >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {index}
+                  {index + 1}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {reportData.UserFname} {reportData.UserLname}

@@ -18,12 +18,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-
-const baseUrl = "http://127.0.0.1:3000/getResearch";
-const baseUrlAdd = "http://127.0.0.1:3000/AddResearch";
-const baseUrlupdate = "http://127.0.0.1:3000/updateResearch";
-const baseUrlDelete = "http://127.0.0.1:3000/deleteResearch";
-const baseUrlSendEmail = "http://127.0.0.1:3000/send-email/research";
+import {
+  getResearch_API_URL,
+  addResearch_API_URL,
+  updateResearch_API_URL,
+  deleteResearch_API_URL,
+  sendEmailResearch_API_URL,
+} from "../API/config/api.config";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -72,11 +73,9 @@ const ResearchData = () => {
     setConfirmDelete(true);
     // delete Research
     axios
-      .delete(baseUrlDelete, { data: { email: researchSelect.email } })
-      .catch((error) => {
-        
-      });
-      openAleartdel();
+      .delete(deleteResearch_API_URL, { data: { email: researchSelect.email } })
+      .catch((error) => {});
+    openAleartdel();
     setresearchSelect({
       fname: "",
       lname: "",
@@ -103,13 +102,15 @@ const ResearchData = () => {
 
     if (researchSelectEmail !== researchModify.email) {
       EmailVerify = "notVerify";
-      axios.post(baseUrlSendEmail, {email: researchModify.email}).then((res) => {
-        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
-      });
+      axios
+        .post(sendEmailResearch_API_URL, { email: researchModify.email })
+        .then((res) => {
+          //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+        });
     }
 
     axios
-      .patch(baseUrlupdate, {
+      .patch(updateResearch_API_URL, {
         fname: researchModify.fname,
         lname: researchModify.lname,
         emailupdate: researchModify.email,
@@ -185,16 +186,18 @@ const ResearchData = () => {
   };
 
   const handleSubmitResearch = () => {
-    axios.put(baseUrlAdd, researchAdd).then((res) => {
+    axios.put(addResearch_API_URL, researchAdd).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
         openAlertAddSuccess();
       }
     });
-    
-    axios.post(baseUrlSendEmail, {email: researchAdd.email}).then((res) => {
-      //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
-    });
+
+    axios
+      .post(sendEmailResearch_API_URL, { email: researchAdd.email })
+      .then((res) => {
+        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+      });
 
     // add Research
     // console.log("submit");
@@ -229,7 +232,7 @@ const ResearchData = () => {
   }, [researchSelect]);
 
   function getresearchData() {
-    axios.get(baseUrl).then((res) => {
+    axios.get(getResearch_API_URL).then((res) => {
       // console.log(res.data);
       setresearchData(res.data.data);
     });
@@ -270,15 +273,9 @@ const ResearchData = () => {
 
   return (
     <React.Fragment>
-      {openAlertMod && (
-        <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>
-      )}
-      {openAlertAdd && (
-        <Alert severity="success">เพิ่มนักวิจัยสำเร็จ</Alert>
-      )}
-      {openAleartDel && (
-        <Alert severity="success">ลบนักวิจัยสำเร็จ</Alert>
-      )}
+      {openAlertMod && <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>}
+      {openAlertAdd && <Alert severity="success">เพิ่มนักวิจัยสำเร็จ</Alert>}
+      {openAleartDel && <Alert severity="success">ลบนักวิจัยสำเร็จ</Alert>}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"

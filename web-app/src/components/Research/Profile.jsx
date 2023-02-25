@@ -9,11 +9,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import EmailIcon from "@mui/icons-material/Email";
-import Icon from "@mui/material/Icon";
-
-const baseUrl = "http://127.0.0.1:3000/getSelectResearch";
-const baseUrlupdate = "http://127.0.0.1:3000/updataSelectResearch";
+import {
+  getSelectResearch_API_URL,
+  updataSelectResearch_API_URL,
+} from "../API/config/api.config";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +51,7 @@ const Profile = () => {
     let date = new Date();
     let dateNow = date.toLocaleDateString();
     axios
-      .patch(baseUrlupdate, {
+      .patch(updataSelectResearch_API_URL, {
         researcherID: researchModify.researcherID,
         Email: researchModify.Email,
         passWord: researchModify.passWord,
@@ -114,7 +113,9 @@ const Profile = () => {
 
   function getresearch() {
     axios
-      .post(baseUrl, { researcherID: JSON.parse(Research).ReseachID })
+      .post(getSelectResearch_API_URL, {
+        researcherID: JSON.parse(Research).ReseachID,
+      })
       .then((res) => {
         setresearch(res.data.data[0]);
       });
@@ -143,9 +144,7 @@ const Profile = () => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={4}>
-              <label>
-                ชื่อ
-              </label>
+              <label>ชื่อ</label>
               <Box
                 component="span"
                 sx={{
@@ -168,9 +167,7 @@ const Profile = () => {
               </Box>
             </Grid>
             <Grid item xs={4}>
-              <label>
-                นามสกุล
-              </label>
+              <label>นามสกุล</label>
               <Box
                 component="span"
                 sx={{
@@ -194,9 +191,7 @@ const Profile = () => {
             </Grid>
 
             <Grid item xs={4}>
-              <label>
-                อีเมล
-              </label>
+              <label>อีเมล</label>
               <Box
                 component="span"
                 sx={{
@@ -220,9 +215,7 @@ const Profile = () => {
             </Grid>
 
             <Grid item xs={4}>
-              <label>
-                เบอร์โทรศัพท์
-              </label>
+              <label>เบอร์โทรศัพท์</label>
               <Box
                 component="span"
                 sx={{
@@ -245,9 +238,7 @@ const Profile = () => {
               </Box>
             </Grid>
             <Grid item xs={4}>
-              <label>
-                วันที่แก้ไขข้อมูลล่าสุด
-              </label>
+              <label>วันที่แก้ไขข้อมูลล่าสุด</label>
               <Box
                 component="span"
                 sx={{
@@ -268,9 +259,8 @@ const Profile = () => {
               >
                 {research.Modifydate}
               </Box>
-              
             </Grid>
-            
+
             <Grid item xs={6}>
               <Button variant="contained" onClick={() => handleModify()}>
                 แก้ไข

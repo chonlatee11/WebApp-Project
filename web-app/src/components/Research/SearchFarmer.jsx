@@ -12,8 +12,7 @@ import TextField from "@mui/material/TextField";
 import { Grid , Box} from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-
-const baseUrl = "http://127.0.0.1:3000/getSelectUser";
+import { getSelectUser_API_URL } from '../API/config/api.config'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,7 +40,7 @@ const SearchFarmer = () => {
   });
 
   function getUserSearch() {
-    axios.post(baseUrl,userSearch).then((res) => {
+    axios.post(getSelectUser_API_URL,userSearch).then((res) => {
       setuserData(res.data.data);
     });
   }

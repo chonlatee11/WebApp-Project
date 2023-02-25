@@ -6,17 +6,16 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { Grid } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import { getHistoryDiseaseModify_API_URL } from "../API/config/api.config";
 
-
-const baseUrl = "http://127.0.0.1:3000/getHistoryDiseaseModify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -54,8 +53,29 @@ const HistoryData = () => {
     NameUpdate: "",
     ProtectUpdate: "",
   });
+  const [sortConfig, setSortConfig] = React.useState({
+    key: "ModifyDate",
+    direction: "desc",
+  });
 
-  
+  const onhandleSelectSort = (historyData) => {
+    const newSortConfig = {
+      key: "ModifyDate",
+      direction: sortConfig.direction === "desc" ? "asc" : "desc",
+    };
+    setSortConfig(newSortConfig);
+  };
+
+  const sortedData = historyData.sort((a, b) => {
+    if (new Date(a[sortConfig.key]) < new Date(b[sortConfig.key])) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (new Date(a[sortConfig.key]) > new Date(b[sortConfig.key])) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+
   React.useEffect(() => {
     getHistoryData();
   }, []);
@@ -75,13 +95,13 @@ const HistoryData = () => {
       NameEngUpdate: e.NameEngUpdate,
       NameUpdate: e.NameUpdate,
       ProtectUpdate: e.ProtectUpdate,
-      ImageNameUpdate: e.ImageNameUpdate
+      ImageNameUpdate: e.ImageNameUpdate,
     });
     handleClickOpenUpDateDelete();
-  }
+  };
 
   function getHistoryData() {
-    axios.get(baseUrl).then((res) => {
+    axios.get(getHistoryDiseaseModify_API_URL).then((res) => {
       // console.log(res.data.data);
       sethistoryData(res.data.data);
     });
@@ -97,14 +117,40 @@ const HistoryData = () => {
               <StyledTableCell align="center">ลำดับที่</StyledTableCell>
               <StyledTableCell align="center">ชื่อโรค</StyledTableCell>
               <StyledTableCell align="center">ผู้แก้ไข</StyledTableCell>
-              <StyledTableCell align="center">วันที่แก้ไข</StyledTableCell>
+              <StyledTableCell align="center">
+                วันที่แก้ไข
+                <TableSortLabel
+                  active={sortConfig.key === "ModifyDate"}
+                  direction={sortConfig.direction}
+                  onClick={() => onhandleSelectSort("ModifyDate")}
+                  sx = {
+                    {
+                        '&.MuiTableSortLabel-root': {
+                            color: 'white',
+                        },
+                        '&.MuiTableSortLabel-root:hover': {
+                            color: 'white',
+                        },
+                        '&.Mui-active': {
+                            color: 'white',
+                        },
+                        '& .MuiTableSortLabel-icon': {
+                            color: 'white !important',
+                        },
+                    }
+                }
+                ></TableSortLabel>
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {historyData.map((historyData ,index) => (
-              <StyledTableRow key={historyData.ReportID} onClick={() => onhandleSelect(historyData)}>
+            {sortedData.map((historyData, index) => (
+              <StyledTableRow
+                key={historyData.ReportID}
+                onClick={() => onhandleSelect(historyData)}
+              >
                 <StyledTableCell component="th" scope="row" align="center">
-                  {index +1}
+                  {index + 1}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {historyData.DiseaseName}
@@ -133,7 +179,6 @@ const HistoryData = () => {
                 value={hitorySelect.InfoUpdate}
                 id="InfoDiseaseData"
                 label="ข้อมูลโรคอ้อย"
-                
                 variant="filled"
                 multiline
                 rows={5}
@@ -146,7 +191,6 @@ const HistoryData = () => {
                 value={hitorySelect.ProtectUpdate}
                 id="ProtectInfoData"
                 label="ข้อมูลการป้องกันโรคในอ้อย"
-                
                 variant="filled"
                 multiline
                 rows={5}
@@ -159,7 +203,6 @@ const HistoryData = () => {
                 value={hitorySelect.NameUpdate}
                 id="DiseaseNameData"
                 label="ชิ่อของโรคอ้อย"
-                
                 variant="filled"
                 fullWidth
                 disabled
@@ -170,21 +213,23 @@ const HistoryData = () => {
                 value={hitorySelect.NameEngUpdate}
                 id="DiseaseNameEngData"
                 label="ชิ่อภาษาอังกฤษ"
-                
                 variant="filled"
                 fullWidth
                 disabled
               />
             </Grid>
             <Grid item xs={6}>
-              {
-                hitorySelect.ImageNameUpdate === "null" ? <></> : <><img
-                src={hitorySelect.ImageNameUpdate}
-                loading="lazy"
-                style={{ width: "550px", height: "300px" }}
-              /></>
-              }
-               
+              {hitorySelect.ImageNameUpdate === "null" ? (
+                <></>
+              ) : (
+                <>
+                  <img
+                    src={hitorySelect.ImageNameUpdate}
+                    loading="lazy"
+                    style={{ width: "550px", height: "300px" }}
+                  />
+                </>
+              )}
             </Grid>
           </Grid>
         </DialogContent>

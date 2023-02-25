@@ -14,8 +14,20 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import { diseaseAllReport_API_URL, keygooglemap } from "../API/config/api.config";
+
 
 const Marker = ({ children }) => children;
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 const SucarCaneData = () => {
   const [duration, setDuration] = React.useState("all");
@@ -23,7 +35,7 @@ const SucarCaneData = () => {
   const mapRef = React.useRef();
 
   //loaddata
-  const url = "http://127.0.0.1:3000/DiseaseAllReport";
+  
   const [report, setReport] = React.useState([]);
   const [openDialog, setopenDialog] = React.useState(false);
   const [selectedReport, setselectedReport] = React.useState({
@@ -44,7 +56,7 @@ const SucarCaneData = () => {
   };
 
   function getData() {
-    axios.get(url).then((res) => {
+    axios.get(diseaseAllReport_API_URL).then((res) => {
       setReport(res.data.data);
     });
   }
@@ -79,12 +91,11 @@ const SucarCaneData = () => {
     <React.Fragment>
       <Box
         width={"100%"}
+        height={"100%"}
         sx={{ justifyContent: "center", alignItems: "center" }}
       >
         <Box mt={1} width={"20%"}>
-          <InputLabel>
-            เลือกช่วงเวลาการแสดงผล
-          </InputLabel>
+          <InputLabel>เลือกช่วงเวลาการแสดงผล</InputLabel>
           <FormControl fullWidth>
             <Select
               labelId="duration-select-label"
@@ -101,13 +112,112 @@ const SucarCaneData = () => {
           </FormControl>
         </Box>
 
-        <Box height={750} width={"100%"}>
+        <Grid container spacing={1} mt={1} mb={1}>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#40E0D0",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคเส้นกลางใบแดง</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#6495ED",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคใบด่าง</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#125008",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคใบจุดเหลือง</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#E1F307",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคราสนิม</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#F33911",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคแส้ดำ</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#EC07C6",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคใบจุดวงแหวน</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#D35400",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคใบขีดสีน้ำตาล</InputLabel>
+            </Item>
+          </Grid>
+          <Grid item xs={3}>
+            <Item>
+              <CoronavirusIcon
+                sx={{
+                  color: "white",
+                  backgroundColor: "#566573",
+                  borderRadius: "50%",
+                }}
+              />
+              <InputLabel>โรคใบจุดสีดำ</InputLabel>
+            </Item>
+          </Grid>
+        </Grid>
+
+        <Box height={"38rem"} width={"100%"}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU",
+              key: keygooglemap,
             }}
-            defaultCenter={{ lat: 14.475, lng: 100.523186 }}
-            defaultZoom={9}
+            defaultCenter={{ lat: 13.9344309, lng: 100.523186 }}
+            defaultZoom={10}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;

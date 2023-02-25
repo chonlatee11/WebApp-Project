@@ -18,12 +18,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
-
-const baseUrl = "http://127.0.0.1:3000/getAdmin";
-const baseUrlAdd = "http://127.0.0.1:3000/AddAdmin";
-const baseUrlupdate = "http://127.0.0.1:3000/updateAdmin";
-const baseUrlDelete = "http://127.0.0.1:3000/deleteAdmin";
-const baseUrlSendEmail = "http://127.0.0.1:3000/send-email/admin";
+import {
+  getAdmin_API_URL,
+  addAdmin_API_URL,
+  updateAdmin_API_URL,
+  deleteAdmin_API_URL,
+  sendEmailAdmin_API_URL,
+} from "../API/config/api.config";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -72,11 +73,11 @@ const AdminData = () => {
     setConfirmDelete(true);
     // delete admin
     axios
-      .delete(baseUrlDelete, { data: { email: adminSelect.email } })
+      .delete(deleteAdmin_API_URL, { data: { email: adminSelect.email } })
       .catch((error) => {
         <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
       });
-      openAleartDelSuccess();
+    openAleartDelSuccess();
     setAdminSelect({
       fname: "",
       lname: "",
@@ -102,20 +103,22 @@ const AdminData = () => {
 
     if (adminSelectEmail !== Adminmodify.email) {
       EmailVerify = "notVerify";
-      axios.post(baseUrlSendEmail, {email: Adminmodify.email}).then((res) => {
-        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
-      });
+      axios
+        .post(sendEmailAdmin_API_URL, { email: Adminmodify.email })
+        .then((res) => {
+          //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+        });
     }
 
     axios
-      .patch(baseUrlupdate, {
+      .patch(updateAdmin_API_URL, {
         fname: Adminmodify.fname,
         lname: Adminmodify.lname,
         emailupdate: Adminmodify.email,
         password: Adminmodify.password,
         modifydate: dateNow,
         email: adminSelectEmail,
-        EmailVerify: EmailVerify
+        EmailVerify: EmailVerify,
       })
       .then((response) => {
         // console.log(response.status);
@@ -124,7 +127,7 @@ const AdminData = () => {
       .catch((error) => {
         // console.log(error);
       });
-   
+
     setAdminSelect({
       fname: "",
       lname: "",
@@ -179,15 +182,17 @@ const AdminData = () => {
   };
 
   const handleSubmitAddAdmin = () => {
-    axios.put(baseUrlAdd, adminAdd).then((res) => {
+    axios.put(addAdmin_API_URL, adminAdd).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
         openAlertAdd();
       }
     });
-    axios.post(baseUrlSendEmail, {email: adminAdd.email}).then((res) => {
-      //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
-    });
+    axios
+      .post(sendEmailAdmin_API_URL, { email: adminAdd.email })
+      .then((res) => {
+        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+      });
     // add Admin
     // console.log("submit");
     // console.log(adminAdd);
@@ -219,7 +224,7 @@ const AdminData = () => {
   }, [adminSelect]);
 
   function getAdminData() {
-    axios.get(baseUrl).then((res) => {
+    axios.get(getAdmin_API_URL).then((res) => {
       // console.log(res.data);
       setAdminData(res.data.data);
     });
@@ -259,15 +264,9 @@ const AdminData = () => {
 
   return (
     <React.Fragment>
-      {openAlertMod && (
-        <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>
-      )}
-      {openAlertAdd && (
-        <Alert severity="success">เพิ่มผู้ดูแลระบบสำเร็จ</Alert>
-      )}
-      {openAleartDel && (
-        <Alert severity="success">ลบผู้ดูแลระบบสำเร็จ</Alert>
-      )}
+      {openAlertMod && <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>}
+      {openAlertAdd && <Alert severity="success">เพิ่มผู้ดูแลระบบสำเร็จ</Alert>}
+      {openAleartDel && <Alert severity="success">ลบผู้ดูแลระบบสำเร็จ</Alert>}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"
@@ -289,125 +288,125 @@ const AdminData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-          
-            {
-              adminData.filter((adminData) => {
-                return adminData.Email !== JSON.parse(adminLogin).email && adminData.Email !== "admin";
-              }).map((adminData, index) => (
+            {adminData
+              .filter((adminData) => {
+                return (
+                  adminData.Email !== JSON.parse(adminLogin).email &&
+                  adminData.Email !== "admin"
+                );
+              })
+              .map((adminData, index) => (
                 <StyledTableRow
-                key={adminData.adminID}
-                onClick={() => onhandleSelect(adminData)}
-              >
-                <StyledTableCell component="th" scope="row" align="center">
-                  {index+1}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {adminData.fName} {adminData.lName}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {adminData.Email}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {adminData.modifydate}
-                </StyledTableCell>
-              </StyledTableRow>
-              ))
-            }
+                  key={adminData.adminID}
+                  onClick={() => onhandleSelect(adminData)}
+                >
+                  <StyledTableCell component="th" scope="row" align="center">
+                    {index + 1}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {adminData.fName} {adminData.lName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {adminData.Email}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {adminData.modifydate}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
 
       <Dialog open={openAddAdminDialog} onClose={handleCloseAddAdminDialog}>
-      <Box component="form"
-        onSubmit={handleSubmitAddAdmin}
+        <Box component="form" onSubmit={handleSubmitAddAdmin}>
+          <DialogContent>
+            <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
-        <DialogContent>
-          <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>      
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <Grid item xs={6}>
-              <TextField
-                value={adminAdd.fname}
-                id="fname"
-                label="ชื่อ"
-                variant="filled"
-                required
-                fullWidth
-                name="fname"
-                autoFocus
-                onChange={(e) => {
-                  setAdminAdd({
-                    ...adminAdd,
-                    fname: e.target.value,
-                  });
-                }}
-              />
+              <Grid item xs={6}>
+                <TextField
+                  value={adminAdd.fname}
+                  id="fname"
+                  label="ชื่อ"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="fname"
+                  autoFocus
+                  onChange={(e) => {
+                    setAdminAdd({
+                      ...adminAdd,
+                      fname: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={adminAdd.lname}
+                  id="lname"
+                  label="นามสกุล"
+                  variant="filled"
+                  required
+                  fullWidth
+                  name="lname"
+                  autoFocus
+                  onChange={(e) => {
+                    setAdminAdd({
+                      ...adminAdd,
+                      lname: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={adminAdd.email}
+                  id="email"
+                  label="อีเมล"
+                  variant="filled"
+                  required
+                  type={"email"}
+                  fullWidth
+                  name="email"
+                  autoFocus
+                  onChange={(e) => {
+                    setAdminAdd({
+                      ...adminAdd,
+                      email: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={adminAdd.password}
+                  id="password"
+                  label="รหัสผ่าน"
+                  variant="filled"
+                  required={true}
+                  fullWidth
+                  name="password"
+                  type={"password"}
+                  autoFocus
+                  onChange={(e) => {
+                    setAdminAdd({
+                      ...adminAdd,
+                      password: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={adminAdd.lname}
-                id="lname"
-                label="นามสกุล"
-                variant="filled"
-                required
-                fullWidth
-                name="lname"
-                autoFocus
-                onChange={(e) => {
-                  setAdminAdd({
-                    ...adminAdd,
-                    lname: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={adminAdd.email}
-                id="email"
-                label="อีเมล"
-                variant="filled"
-                required
-                type={"email"}
-                fullWidth
-                name="email"
-                autoFocus
-                onChange={(e) => {
-                  setAdminAdd({
-                    ...adminAdd,
-                    email: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={adminAdd.password}
-                id="password"
-                label="รหัสผ่าน"
-                variant="filled"
-                required = {true}
-                fullWidth
-                name="password"
-                type={"password"}
-                autoFocus
-                onChange={(e) => {
-                  setAdminAdd({
-                    ...adminAdd,
-                    password: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button type="submit" >ยืนยัน</Button>
-          <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button type="submit">ยืนยัน</Button>
+            <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
+          </DialogActions>
         </Box>
       </Dialog>
 
