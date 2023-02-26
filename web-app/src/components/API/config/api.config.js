@@ -30,7 +30,7 @@ export const getSelectResearch_API_URL = "http://127.0.0.1:3000/getSelectResearc
 export const updataSelectResearch_API_URL = "http://127.0.0.1:3000/updataSelectResearch";
 
 // SearchDisease
-export const getSelectDesease_API_URL = "http://127.0.0.1:3000/getSelectDesease";
+export const getSelectDesease_API_URL = "http://127.0.0.1:3002/getSelectDesease";
 
 // SearchFarmer
 export const getSelectUser_API_URL = "http://127.0.0.1:3000/getSelectUser";

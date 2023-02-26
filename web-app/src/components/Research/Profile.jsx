@@ -257,7 +257,7 @@ const Profile = () => {
                   fontWeight: "700",
                 }}
               >
-                {research.Modifydate}
+                {research.Modifydate ? research.Modifydate : "ยังไม่มีการแก้ไข"}
               </Box>
             </Grid>
 

@@ -12,6 +12,10 @@ import TextField from "@mui/material/TextField";
 import { Grid , Box} from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { getSelectUser_API_URL } from '../API/config/api.config'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -31,6 +35,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+  "&:hover": {
+    backgroundColor: "skyblue",
+  },
 }));
 
 const SearchFarmer = () => {
@@ -38,12 +45,39 @@ const SearchFarmer = () => {
   const [userSearch, setuserSearch] = React.useState({
     Name: "",
   });
+  const [userDataSelect, setuserDataSelect] = React.useState({
+    UserFname: "",
+    UserLname: "",
+    PhoneNumber: "",
+    AddressUser: "",
+    ReportCount: "",
+  });
+  const [openDialog, setopenDialog] = React.useState(false);
 
   function getUserSearch() {
     axios.post(getSelectUser_API_URL,userSearch).then((res) => {
       setuserData(res.data.data);
     });
   }
+
+  const onhandleSelect = (e) => {
+    setuserDataSelect({
+      ...userDataSelect,
+      UserFname: e.fName,
+      UserLname: e.lName,
+      PhoneNumber: e.PhoneNumber,
+      AddressUser: e.Address,
+      ReportCount: e.ReportCount,
+    });
+    setopenDialoge();
+  };
+
+  const setopenDialoge = () => {
+    setopenDialog(true);
+  };
+  const setCloseDialog = () => {
+    setopenDialog(false);
+  };
 
   return (
     <React.Fragment>
@@ -91,9 +125,10 @@ const SearchFarmer = () => {
             </StyledTableRow>
             ):(
               userData.map((userData, index) => (
-                <StyledTableRow key={userData.UserID}>
+                <StyledTableRow key={userData.UserID}
+                onClick={() => onhandleSelect(userData)}>
                   <StyledTableCell component="th" scope="row">
-                    {index +1 }
+                    {index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {userData.fName} {userData.lName}
@@ -110,6 +145,69 @@ const SearchFarmer = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={openDialog} onClose={setCloseDialog}>
+        <DialogContent>
+          <DialogTitle>ข้อมูลเกษตรกร</DialogTitle>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
+            <Grid item xs={6}>
+              <TextField
+                id="UserFname"
+                label="ชื่อ"
+                defaultValue={userDataSelect.UserFname}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="UserLname"
+                label="นามสกุล"
+                defaultValue={userDataSelect.UserLname}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="PhoneNumber"
+                label="หมายเลขโทรศัพท์"
+                defaultValue={userDataSelect.PhoneNumber}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="ReportCount"
+                label="จำนวนรายงานโรคอ้อย"
+                defaultValue={userDataSelect.ReportCount}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                multiline
+                rows={2}
+                id="AddressUser"
+                label="ที่อยู่"
+                defaultValue={userDataSelect.AddressUser}
+                variant="filled"
+                fullWidth
+                disabled
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
     </React.Fragment>
   );
 };

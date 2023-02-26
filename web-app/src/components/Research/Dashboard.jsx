@@ -5,7 +5,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import MapIcon from "@mui/icons-material/Map";
 import ReportIcon from "@mui/icons-material/Report";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import ImageSearchIcon from "@mui/icons-material/ImageSearch";
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -201,7 +201,7 @@ function DashboardContent() {
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>
-                <ImageSearchIcon />
+                <ContentPasteSearchIcon />
               </ListItemIcon>
               <ListItemText
                 primary="ค้นหาข้อมูลโรคที่ระบาด"
