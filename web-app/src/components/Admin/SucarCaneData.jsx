@@ -54,6 +54,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const SucarCaneData = () => {
   const [sucarCaneData, setsucarCaneData] = React.useState([]);
+  const [openAlertMod, setOpenAlertMod] = React.useState(false);
+  const [openAlertAdd, setOpenAlertAdd] = React.useState(false);
+  const [openAleartDel, setOpenAleartDel] = React.useState(false);
   const [openAddSucarCaneDialog, setOpenAddSucarCaneDialog] =
     React.useState(false);
   const [openUpDateDelete, setopenUpDateDeletee] = React.useState(false);
@@ -88,6 +91,7 @@ const SucarCaneData = () => {
   const updateHistory = (dateNow) => {
     const Admin = localStorage.getItem("User");
     // console.log(JSON.parse(Admin));
+    // console.log(DiseaseModify)
     let historyUpdate = {
       DiseaseID: DiseaseSelect.DiseaseID,
       DiseaseName: DiseaseSelect.DiseaseName,
@@ -119,6 +123,11 @@ const SucarCaneData = () => {
     axios
       .delete(deleteDisease_API_URL, {
         data: { DiseaseID: DiseaseSelect.DiseaseID },
+      }).then((res) => {
+        if (res.status === 200) {
+          // console.log("delete success");
+          openAleartDelSuccess();
+        }
       })
       .catch((error) => {
         <Alert severity="error">เกิดข้อผิดพลาด!!</Alert>;
@@ -158,6 +167,7 @@ const SucarCaneData = () => {
     axios.patch(updateDisease_API_URL, formData).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
+        openAlertModSuccess();
         // console.log("update success");
       }
     });
@@ -168,6 +178,7 @@ const SucarCaneData = () => {
       DiseaseNameEng: "",
       DiseaseID: "",
       Modifydate: "",
+      ImageName: "",
     });
     setConfirmModifyDialog(false);
     setopenUpDateDeletee(false);
@@ -209,6 +220,7 @@ const SucarCaneData = () => {
     axios.put(addDisease_API_URL, formData).then((res) => {
       // console.log(res.data.status);
       if (res.data.status === "success") {
+        openAlertAddSuccess();
         // console.log("add success");
       }
     });
@@ -237,7 +249,7 @@ const SucarCaneData = () => {
       InfoDisease: DiseaseSelect.InfoDisease,
       ProtectInfo: DiseaseSelect.ProtectInfo,
       DiseaseNameEng: DiseaseSelect.DiseaseNameEng,
-      file: DiseaseSelect.ImageUrl,
+      file: {name: DiseaseSelect.ImageName},
     });
   }, [DiseaseSelect]);
 
@@ -256,13 +268,37 @@ const SucarCaneData = () => {
       ProtectInfo: e.ProtectInfo,
       DiseaseNameEng: e.DiseaseNameEng,
       DiseaseID: e.DiseaseID,
-      ImageUrl: e.ImageName,
+      ImageName: e.ImageName,
     });
     handleClickopenUpDateDelete();
   };
 
+  function openAlertModSuccess() {
+    setOpenAlertMod(true);
+    setTimeout(() => {
+      setOpenAlertMod(false);
+    }, 2000);
+  }
+
+  function openAlertAddSuccess() {
+    setOpenAlertAdd(true);
+    setTimeout(() => {
+      setOpenAlertAdd(false);
+    }, 2000);
+  }
+
+  function openAleartDelSuccess() {
+    setOpenAleartDel(true);
+    setTimeout(() => {
+      setOpenAleartDel(false);
+    }, 2000);
+  }
+
   return (
     <React.Fragment>
+      {openAlertMod && <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>}
+      {openAlertAdd && <Alert severity="success">เพิ่มข้อมูลโรคสำเร็จ</Alert>}
+      {openAleartDel && <Alert severity="success">ลบข้อมูลโรคสำเร็จ</Alert>}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"
@@ -334,51 +370,11 @@ const SucarCaneData = () => {
         <Box component="form" onSubmit={handleSubmitDisease}>
           <DialogContent>
             <DialogTitle>เพิ่มข้อมูลโรค</DialogTitle>
-
             <Grid
               container
               rowSpacing={1}
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
-              <Grid item xs={6}>
-                <TextField
-                  value={DiseaseAdd.InfoDisease}
-                  id="InfoDisease"
-                  label="รายละเอียดข้อมูลโรคอ้อย"
-                  variant="filled"
-                  required
-                  fullWidth
-                  multiline
-                  name="InfoDisease"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      InfoDisease: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  value={DiseaseAdd.ProtectInfo}
-                  id="ProtectInfo"
-                  label="ข้อมูลการป้องกันโรคในอ้อย"
-                  variant="filled"
-                  required
-                  fullWidth
-                  multiline
-                  name="ProtectInfo"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      ProtectInfo: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-
               <Grid item xs={6}>
                 <TextField
                   value={DiseaseAdd.DiseaseName}
@@ -416,22 +412,80 @@ const SucarCaneData = () => {
                   }}
                 />
               </Grid>
+
               <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.InfoDisease}
+                  id="InfoDisease"
+                  label="รายละเอียดข้อมูลโรคอ้อย"
+                  variant="filled"
+                  required
+                  fullWidth
+                  multiline
+                  name="InfoDisease"
+                  autoFocus
+                  onChange={(e) => {
+                    setDiseaseAdd({
+                      ...DiseaseAdd,
+                      InfoDisease: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  value={DiseaseAdd.ProtectInfo}
+                  id="ProtectInfo"
+                  label="ข้อมูลการป้องกันโรคในอ้อย"
+                  variant="filled"
+                  required
+                  fullWidth
+                  multiline
+                  name="ProtectInfo"
+                  autoFocus
+                  onChange={(e) => {
+                    setDiseaseAdd({
+                      ...DiseaseAdd,
+                      ProtectInfo: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
                 <Button variant="contained" component="label">
                   รูปภาพของโรคอ้อย
                   <input
+                    required
                     hidden
                     accept="image/png, image/jpeg"
                     type="file"
                     onChange={(e) => {
-                      setDiseaseAdd({
-                        ...DiseaseAdd,
-                        file: e.target.files[0],
-                      });
+                      if (e.target.files.length === 1) { // check that only one file is selected
+                        const file = e.target.files[0];
+                        setDiseaseAdd({
+                          ...DiseaseAdd,
+                          file: file,
+                          imageUrl: URL.createObjectURL(file) // create a temporary URL for the selected image
+                        });
+                      }
+                      else {
+                        setDiseaseAdd({
+                          ...DiseaseAdd,
+                          file: null,
+                          imageUrl: null // clear the imageUrl state
+                        });
+                      }
                     }}
                   />
                 </Button>
+                {DiseaseAdd.imageUrl && <img 
+                loading="lazy"
+                style={{ width: "100%", height: 400 , marginTop: 10}}
+                src={DiseaseAdd.imageUrl} alt="Selected Image" />}
               </Grid>
+
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -451,6 +505,7 @@ const SucarCaneData = () => {
           >
             <Grid item xs={6}>
               <TextField
+                
                 id="DiseaseNameData"
                 label="ชิ่อของโรคอ้อย"
                 defaultValue={DiseaseSelect.DiseaseName}
@@ -466,6 +521,7 @@ const SucarCaneData = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                
                 id="DiseaseNameEngData"
                 label="ชิ่อภาษาอังกฤษ"
                 defaultValue={DiseaseSelect.DiseaseNameEng}
@@ -481,6 +537,7 @@ const SucarCaneData = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
+                
                 id="InfoDiseaseData"
                 label="ข้อมูลโรคอ้อย"
                 defaultValue={DiseaseSelect.InfoDisease}
@@ -514,22 +571,37 @@ const SucarCaneData = () => {
               />
             </Grid>
 
-            <Grid item xs={6}>
-              <Button variant="contained" component="label">
-                รูปภาพของโรคอ้อย
-                <input
-                  hidden
-                  accept="image/png, image/jpeg"
-                  type="file"
-                  onChange={(e) => {
-                    setDiseaseModify({
-                      ...DiseaseModify,
-                      file: e.target.files[0],
-                    });
-                  }}
-                />
-              </Button>
-            </Grid>
+            <Grid item xs={12}>
+                <Button variant="contained" component="label">
+                  รูปภาพของโรคอ้อย
+                  <input
+                    hidden
+                    accept="image/png, image/jpeg"
+                    type="file"
+                    onChange={(e) => {
+                      if (e.target.files.length === 1) { // check that only one file is selected
+                        const file = e.target.files[0];
+                        setDiseaseModify({
+                          ...DiseaseModify,
+                          file: file,
+                          imageUrl: URL.createObjectURL(file) // create a temporary URL for the selected image
+                        });
+                      }
+                      else {
+                        setDiseaseAdd({
+                          ...DiseaseModify,
+                          file: null,
+                          imageUrl: null // clear the imageUrl state
+                        });
+                      }
+                    }}
+                  />
+                </Button>
+                {DiseaseModify.imageUrl && <img 
+                loading="lazy"
+                style={{ width: "100%", height: 400 , marginTop: 10}}
+                src={DiseaseModify.imageUrl} alt="Selected Image" />}
+              </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

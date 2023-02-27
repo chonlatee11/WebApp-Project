@@ -40,3 +40,7 @@ export const diseaseAllReport_API_URL = 'http://127.0.0.1:3000/DiseaseAllReport'
 
 // keygooglemap
 export const keygooglemap = "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU";
+
+// Authen
+export const loginAdmin_API_URL = "http://127.0.0.1:3000/loginADMIN";
+export const loginResearch_API_URL = "http://127.0.0.1:3000/ResearcherLogin";

@@ -1,6 +1,7 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loginAdmin_API_URL, loginResearch_API_URL } from "../components/API/config/api.config"
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   async function login(email, password, role) {
     if (role === "admin") {
       await axios
-        .post("http://127.0.0.1:3000/loginADMIN", {
+        .post(loginAdmin_API_URL, {
           email: email,
           password: password,
           role: role,
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
               // AdminID: res.data.AdminID,
               user: localStorage.setItem("User", JSON.stringify(res.data)),
             });
+            // console.log(res.data);
             // localStorage.setItem("User", );
             navigate("/AdminPage");
           }
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         });
     } else if (role === "researcher") {
       await axios
-        .post("http://127.0.0.1:3000/ResearcherLogin", {
+        .post(loginResearch_API_URL, {
           Email: email,
           passWord: password,
           role: role,
