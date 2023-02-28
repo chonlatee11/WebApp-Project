@@ -72,16 +72,21 @@ const SearchDisease = () => {
     setSortConfig(newSortConfig);
   };
 
-  const sortedData = diseaseData.sort((a, b) => {
-    if (new Date(a[sortConfig.key]) < new Date(b[sortConfig.key])) {
-      return sortConfig.direction === "asc" ? -1 : 1;
-    }
-    if (new Date(a[sortConfig.key]) > new Date(b[sortConfig.key])) {
-      return sortConfig.direction === "asc" ? 1 : -1;
-    }
-    return 0;
-  });
-
+  let sortedData = [];
+  if (diseaseData.length > 0) {
+    sortedData = diseaseData.sort((a, b) => {
+      if (new Date(a[sortConfig.key]) < new Date(b[sortConfig.key])) {
+        return sortConfig.direction === "asc" ? -1 : 1;
+      }
+      if (new Date(a[sortConfig.key]) > new Date(b[sortConfig.key])) {
+        return sortConfig.direction === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+  
+  console.log("🚀 ~ file: SearchDisease.jsx:84 ~ sortedData ~ sortedData:", sortedData)
+  console.log("🚀 ~ file: SearchDisease.jsx:46 ~ SearchDisease ~ diseaseData:", diseaseData)
   function getdiseaseSearch() {
     axios.post(getSelectDesease_API_URL, diseaseSearch).then((res) => {
       setdiseaseData(res.data.data);
