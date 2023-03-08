@@ -85,8 +85,8 @@ const SearchDisease = () => {
     });
   }
   
-  console.log("🚀 ~ file: SearchDisease.jsx:84 ~ sortedData ~ sortedData:", sortedData)
-  console.log("🚀 ~ file: SearchDisease.jsx:46 ~ SearchDisease ~ diseaseData:", diseaseData)
+  // console.log("🚀 ~ file: SearchDisease.jsx:84 ~ sortedData ~ sortedData:", sortedData)
+  // console.log("🚀 ~ file: SearchDisease.jsx:46 ~ SearchDisease ~ diseaseData:", diseaseData)
   function getdiseaseSearch() {
     axios.post(getSelectDesease_API_URL, diseaseSearch).then((res) => {
       setdiseaseData(res.data.data);

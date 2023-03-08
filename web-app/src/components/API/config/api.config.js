@@ -36,7 +36,7 @@ export const getSelectDesease_API_URL = "http://127.0.0.1:3002/getSelectDesease"
 export const getSelectUser_API_URL = "http://127.0.0.1:3000/getSelectUser";
 
 // SucarCaneData
-export const diseaseAllReport_API_URL = 'http://127.0.0.1:3000/DiseaseAllReport';
+export const diseaseAllReport_API_URL = 'http://127.0.0.1:3002/DiseaseAllReport';
 
 // keygooglemap
 export const keygooglemap = "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU";
