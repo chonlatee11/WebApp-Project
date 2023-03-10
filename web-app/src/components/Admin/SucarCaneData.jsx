@@ -25,6 +25,8 @@ import {
   deleteDisease_API_URL,
   historyDiseaseModify_API_URL,
 } from "../API/config/api.config";
+import { useForm, Controller } from "react-hook-form";
+import CustomInput from "../CustomInput/CustomInput";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,6 +55,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const SucarCaneData = () => {
+  const { control, handleSubmit , reset } = useForm({
+    defaultValues: {
+      DiseaseName: "",
+      DiseaseNameEng: "",
+      InfoDisease: "",
+      ProtectInfo: "",
+      file: "",
+    },
+  });
   const [sucarCaneData, setsucarCaneData] = React.useState([]);
   const [openAlertMod, setOpenAlertMod] = React.useState(false);
   const [openAlertAdd, setOpenAlertAdd] = React.useState(false);
@@ -191,6 +202,7 @@ const SucarCaneData = () => {
 
   const handleCloseAddDiseaseDialog = () => {
     setOpenAddSucarCaneDialog(false);
+    reset();
     setDiseaseAdd({
       DiseaseName: "",
       InfoDisease: "",
@@ -207,14 +219,42 @@ const SucarCaneData = () => {
     setopenUpDateDeletee(false);
   };
 
-  const handleSubmitDisease = () => {
-    // diseaseAdd
+  // const handleSubmitDisease = () => {
+  //   // diseaseAdd
+  //   const formData = new FormData();
+  //   formData.append("file", DiseaseAdd.file);
+  //   formData.append("DiseaseName", DiseaseAdd.DiseaseName);
+  //   formData.append("InfoDisease", DiseaseAdd.InfoDisease);
+  //   formData.append("ProtectInfo", DiseaseAdd.ProtectInfo);
+  //   formData.append("DiseaseNameEng", DiseaseAdd.DiseaseNameEng);
+  //   console.log(DiseaseAdd);
+  //   // console.log(formData.get("DiseaseName"));
+  //   axios.put(addDisease_API_URL, formData).then((res) => {
+  //     // console.log(res.data.status);
+  //     if (res.data.status === "success") {
+  //       openAlertAddSuccess();
+  //       // console.log("add success");
+  //     }
+  //   });
+  //   setDiseaseAdd({
+  //     DiseaseName: "",
+  //     InfoDisease: "",
+  //     ProtectInfo: "",
+  //     DiseaseNameEng: "",
+  //     Image: "",
+  //   });
+  //   setOpenAddSucarCaneDialog(false);
+  // };
+
+  const onSubmit = data => {
+    // console.log(data);
+    // console.log(DiseaseAdd.file);
     const formData = new FormData();
     formData.append("file", DiseaseAdd.file);
-    formData.append("DiseaseName", DiseaseAdd.DiseaseName);
-    formData.append("InfoDisease", DiseaseAdd.InfoDisease);
-    formData.append("ProtectInfo", DiseaseAdd.ProtectInfo);
-    formData.append("DiseaseNameEng", DiseaseAdd.DiseaseNameEng);
+    formData.append("DiseaseName", data.DiseaseName);
+    formData.append("InfoDisease", data.InfoDisease);
+    formData.append("ProtectInfo", data.ProtectInfo);
+    formData.append("DiseaseNameEng", data.DiseaseNameEng);
     // console.log(DiseaseAdd);
     // console.log(formData.get("DiseaseName"));
     axios.put(addDisease_API_URL, formData).then((res) => {
@@ -232,7 +272,8 @@ const SucarCaneData = () => {
       Image: "",
     });
     setOpenAddSucarCaneDialog(false);
-  };
+    reset();
+  }
 
   const handleSubmitModifyDisease = () => {
     setConfirmModifyDialog(true);
@@ -367,7 +408,8 @@ const SucarCaneData = () => {
         open={openAddSucarCaneDialog}
         onClose={handleCloseAddDiseaseDialog}
       >
-        <Box component="form" onSubmit={handleSubmitDisease}>
+        <Box>
+          <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <DialogTitle>เพิ่มข้อมูลโรค</DialogTitle>
             <Grid
@@ -376,7 +418,15 @@ const SucarCaneData = () => {
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <Grid item xs={6}>
-                <TextField
+                <CustomInput 
+                name={"DiseaseName"}
+                label={"ชื่อของโรคอ้อย"}
+                value={DiseaseAdd.DiseaseName}
+                required={true}
+                control={control}
+                id={"DiseaseName"}
+                 />
+                {/* <TextField
                   value={DiseaseAdd.DiseaseName}
                   id="DiseaseName"
                   label="ชิ่อของโรคอ้อย"
@@ -390,12 +440,21 @@ const SucarCaneData = () => {
                       ...DiseaseAdd,
                       DiseaseName: e.target.value,
                     });
-                  }}
-                />
+                  }
+                }
+                /> */}
               </Grid>
 
               <Grid item xs={6}>
-                <TextField
+              <CustomInput 
+                name={"DiseaseNameEng"}
+                label={"ชื่อภาษาอังกฤษ"}
+                value={DiseaseAdd.DiseaseNameEng}
+                required={true}
+                control={control}
+                id={"DiseaseNameEng"}
+                 />
+                {/* <TextField
                   value={DiseaseAdd.DiseaseNameEng}
                   id="DiseaseNameEng"
                   label="ชื่อภาษาอังกฤษ"
@@ -410,11 +469,20 @@ const SucarCaneData = () => {
                       DiseaseNameEng: e.target.value,
                     });
                   }}
-                />
+                /> */}
               </Grid>
 
               <Grid item xs={6}>
-                <TextField
+              <CustomInput 
+                name={"InfoDisease"}
+                label={"รายละเอียดของโรค"}
+                value={DiseaseAdd.InfoDisease}
+                required={true}
+                control={control}
+                id={"InfoDisease"}
+                multiline={true}
+                 />
+                {/* <TextField
                   value={DiseaseAdd.InfoDisease}
                   id="InfoDisease"
                   label="รายละเอียดข้อมูลโรคอ้อย"
@@ -430,11 +498,20 @@ const SucarCaneData = () => {
                       InfoDisease: e.target.value,
                     });
                   }}
-                />
+                /> */}
               </Grid>
 
               <Grid item xs={6}>
-                <TextField
+              <CustomInput 
+                name={"ProtectInfo"}
+                label={"ข้อมูลการป้องกันโรคในอ้อย"}
+                value={DiseaseAdd.ProtectInfo}
+                required={true}
+                control={control}
+                id={"ProtectInfo"}
+                multiline={true}
+                 />
+                {/* <TextField
                   value={DiseaseAdd.ProtectInfo}
                   id="ProtectInfo"
                   label="ข้อมูลการป้องกันโรคในอ้อย"
@@ -450,10 +527,19 @@ const SucarCaneData = () => {
                       ProtectInfo: e.target.value,
                     });
                   }}
-                />
+                /> */}
               </Grid>
 
               <Grid item xs={12}>
+              {/* <CustomInput
+                name={"ImageUrl"}
+                label={"รูปภาพของโรคอ้อย"}
+                value={DiseaseAdd.ImageUrl}
+                required={true}
+                control={control}
+                id={"ImageUrl"}
+                type={"file"}
+                /> */}
                 <Button variant="contained" component="label">
                   รูปภาพของโรคอ้อย
                   <input
@@ -492,6 +578,7 @@ const SucarCaneData = () => {
             <Button type="submit">ยืนยัน</Button>
             <Button onClick={handleCloseAddDiseaseDialog}>ยกเลิก</Button>
           </DialogActions>
+          </form>
         </Box>
       </Dialog>
 
