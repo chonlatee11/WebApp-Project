@@ -175,7 +175,7 @@ const AdminData = () => {
       }
     });
     axios
-      .post(sendEmailAdmin_API_URL, { email: adminAdd.email })
+      .post(sendEmailAdmin_API_URL, { email: data.email })
       .then((res) => {
         //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
       });
