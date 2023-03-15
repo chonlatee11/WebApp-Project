@@ -10,10 +10,11 @@ const CustomInput = ({
   label,
   type,
   multiline,
-  errormessage,
+  inputProps,
   rows,
   required,
   id,
+  // defaultValue,
 }) => {
   return (
     <Controller
@@ -49,6 +50,8 @@ const CustomInput = ({
           type={type}
           multiline={multiline}
           rows={rows}
+          inputProps={inputProps}
+          // defaultValue={defaultValue}
         />
         }
                 

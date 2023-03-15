@@ -219,33 +219,6 @@ const SucarCaneData = () => {
     setopenUpDateDeletee(false);
   };
 
-  // const handleSubmitDisease = () => {
-  //   // diseaseAdd
-  //   const formData = new FormData();
-  //   formData.append("file", DiseaseAdd.file);
-  //   formData.append("DiseaseName", DiseaseAdd.DiseaseName);
-  //   formData.append("InfoDisease", DiseaseAdd.InfoDisease);
-  //   formData.append("ProtectInfo", DiseaseAdd.ProtectInfo);
-  //   formData.append("DiseaseNameEng", DiseaseAdd.DiseaseNameEng);
-  //   console.log(DiseaseAdd);
-  //   // console.log(formData.get("DiseaseName"));
-  //   axios.put(addDisease_API_URL, formData).then((res) => {
-  //     // console.log(res.data.status);
-  //     if (res.data.status === "success") {
-  //       openAlertAddSuccess();
-  //       // console.log("add success");
-  //     }
-  //   });
-  //   setDiseaseAdd({
-  //     DiseaseName: "",
-  //     InfoDisease: "",
-  //     ProtectInfo: "",
-  //     DiseaseNameEng: "",
-  //     Image: "",
-  //   });
-  //   setOpenAddSucarCaneDialog(false);
-  // };
-
   const onSubmit = data => {
     // console.log(data);
     // console.log(DiseaseAdd.file);
@@ -426,23 +399,6 @@ const SucarCaneData = () => {
                 control={control}
                 id={"DiseaseName"}
                  />
-                {/* <TextField
-                  value={DiseaseAdd.DiseaseName}
-                  id="DiseaseName"
-                  label="ชิ่อของโรคอ้อย"
-                  variant="filled"
-                  required
-                  fullWidth
-                  name="DiseaseName"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      DiseaseName: e.target.value,
-                    });
-                  }
-                }
-                /> */}
               </Grid>
 
               <Grid item xs={6}>
@@ -454,22 +410,6 @@ const SucarCaneData = () => {
                 control={control}
                 id={"DiseaseNameEng"}
                  />
-                {/* <TextField
-                  value={DiseaseAdd.DiseaseNameEng}
-                  id="DiseaseNameEng"
-                  label="ชื่อภาษาอังกฤษ"
-                  variant="filled"
-                  required
-                  fullWidth
-                  name="DiseaseNameEng"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      DiseaseNameEng: e.target.value,
-                    });
-                  }}
-                /> */}
               </Grid>
 
               <Grid item xs={6}>
@@ -482,23 +422,6 @@ const SucarCaneData = () => {
                 id={"InfoDisease"}
                 multiline={true}
                  />
-                {/* <TextField
-                  value={DiseaseAdd.InfoDisease}
-                  id="InfoDisease"
-                  label="รายละเอียดข้อมูลโรคอ้อย"
-                  variant="filled"
-                  required
-                  fullWidth
-                  multiline
-                  name="InfoDisease"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      InfoDisease: e.target.value,
-                    });
-                  }}
-                /> */}
               </Grid>
 
               <Grid item xs={6}>
@@ -511,35 +434,9 @@ const SucarCaneData = () => {
                 id={"ProtectInfo"}
                 multiline={true}
                  />
-                {/* <TextField
-                  value={DiseaseAdd.ProtectInfo}
-                  id="ProtectInfo"
-                  label="ข้อมูลการป้องกันโรคในอ้อย"
-                  variant="filled"
-                  required
-                  fullWidth
-                  multiline
-                  name="ProtectInfo"
-                  autoFocus
-                  onChange={(e) => {
-                    setDiseaseAdd({
-                      ...DiseaseAdd,
-                      ProtectInfo: e.target.value,
-                    });
-                  }}
-                /> */}
               </Grid>
 
               <Grid item xs={12}>
-              {/* <CustomInput
-                name={"ImageUrl"}
-                label={"รูปภาพของโรคอ้อย"}
-                value={DiseaseAdd.ImageUrl}
-                required={true}
-                control={control}
-                id={"ImageUrl"}
-                type={"file"}
-                /> */}
                 <Button variant="contained" component="label">
                   รูปภาพของโรคอ้อย
                   <input
