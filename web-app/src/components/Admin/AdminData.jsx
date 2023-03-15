@@ -25,6 +25,8 @@ import {
   deleteAdmin_API_URL,
   sendEmailAdmin_API_URL,
 } from "../API/config/api.config";
+import { useForm, Controller } from "react-hook-form";
+import CustomInput from "../CustomInput/CustomInput";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,6 +55,42 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AdminData = () => {
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+      phoneNumber: "",
+      fnameModify: "",
+      lnameModify: "",
+      emailModify: "",
+      passwordModify: "",
+      phoneNumberModify: "",
+    },
+  });
+  const [adminSelect, setAdminSelect] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    modifydate: "",
+  });
+
+  const [adminAdd, setAdminAdd] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+  });
+
+  const [Adminmodify, setAdminModify] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    modifydate: "",
+  });
   const adminLogin = localStorage.getItem("User");
   const [adminData, setAdminData] = React.useState([]);
   const [openAddAdminDialog, setOpenAddAdminDialog] = React.useState(false);
@@ -92,6 +130,130 @@ const AdminData = () => {
   const handleCloseConfirmModify = () => {
     setConfirmModifyDialog(false);
   };
+
+  const onSubmitModifyResearch = (data) => {
+    setAdminModify({
+      fname: data.fnameModify,
+      lname: data.lnameModify,
+      email: data.emailModify,
+      password: data.passwordModify,
+    });
+    handleSubmitModifyAdmin();
+    reset();
+  };
+
+  const handleClickOpenAddAdminDialog = () => {
+    setOpenAddAdminDialog(true);
+  };
+  const handleCloseAddAdminDialog = () => {
+    setOpenAddAdminDialog(false);
+    setAdminAdd({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+    });
+  };
+  const handleClickOpenUpDateDelete = () => {
+    setOpenUpDateDelete(true);
+  };
+  const handleCloseUpDateDelete = () => {
+    setOpenUpDateDelete(false);
+  };
+
+  const handleSubmitAddAdmin = (data) => {
+    console.log(data);
+    axios.put(addAdmin_API_URL, {
+      fname : data.fname,
+      lname : data.lname,
+      email : data.email,
+      password  : data.password,
+    }).then((res) => {
+      // console.log(res.data.status);
+      if (res.data.status === "success") {
+        openAlertAddSuccess();
+      }
+    });
+    axios
+      .post(sendEmailAdmin_API_URL, { email: adminAdd.email })
+      .then((res) => {
+        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+      });
+    // add Admin
+    // console.log("submit");
+    // console.log(adminAdd);
+    setAdminAdd({
+      fname: "",
+      lname: "",
+      email: "",
+      password: "",
+    });
+    setOpenAddAdminDialog(false);
+    reset();
+  };
+
+  const handleSubmitModifyAdmin = () => {
+    setConfirmModifyDialog(true);
+  };
+
+  const handleSubmitDeleteAdmin = () => {
+    setConfirmDeleteDialog(true);
+  };
+
+  React.useEffect(() => {
+    getAdminData();
+    setAdminModify({
+      fname: adminSelect.fname,
+      lname: adminSelect.lname,
+      email: adminSelect.email,
+      password: adminSelect.password,
+    });
+  }, [adminSelect]);
+
+  function getAdminData() {
+    axios.get(getAdmin_API_URL).then((res) => {
+      // console.log(res.data);
+      setAdminData(res.data.data);
+    });
+  }
+
+  const onhandleSelect = (e) => {
+    setAdminSelect({
+      ...adminSelect,
+      fname: e.fName,
+      lname: e.lName,
+      email: e.Email,
+      password: e.passWord,
+    });
+    reset({
+      fnameModify: e.fName,
+      lnameModify: e.lName,
+      emailModify: e.Email,
+      passwordModify: "",
+    });
+    handleClickOpenUpDateDelete();
+  };
+
+  function openAlertModSuccess() {
+    setOpenAlertMod(true);
+    setTimeout(() => {
+      setOpenAlertMod(false);
+    }, 2000);
+  }
+
+  function openAlertAddSuccess() {
+    setOpenAlertAdd(true);
+    setTimeout(() => {
+      setOpenAlertAdd(false);
+    }, 2000);
+  }
+
+  function openAleartDelSuccess() {
+    setOpenAleartDel(true);
+    setTimeout(() => {
+      setOpenAleartDel(false);
+    }, 2000);
+  }
 
   const handleConfirmModify = () => {
     // modifyAdmin
@@ -139,134 +301,11 @@ const AdminData = () => {
     setConfirmModify(false);
   };
 
-  const [adminSelect, setAdminSelect] = React.useState({
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-    modifydate: "",
-  });
-
-  const [adminAdd, setAdminAdd] = React.useState({
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-  });
-
-  const [Adminmodify, setAdminModify] = React.useState({
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-    modifydate: "",
-  });
-
-  const handleClickOpenAddAdminDialog = () => {
-    setOpenAddAdminDialog(true);
-  };
-  const handleCloseAddAdminDialog = () => {
-    setOpenAddAdminDialog(false);
-    setAdminAdd({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-    });
-  };
-  const handleClickOpenUpDateDelete = () => {
-    setOpenUpDateDelete(true);
-  };
-  const handleCloseUpDateDelete = () => {
-    setOpenUpDateDelete(false);
-  };
-
-  const handleSubmitAddAdmin = () => {
-    axios.put(addAdmin_API_URL, adminAdd).then((res) => {
-      // console.log(res.data.status);
-      if (res.data.status === "success") {
-        openAlertAdd();
-      }
-    });
-    axios
-      .post(sendEmailAdmin_API_URL, { email: adminAdd.email })
-      .then((res) => {
-        //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
-      });
-    // add Admin
-    // console.log("submit");
-    // console.log(adminAdd);
-    setAdminAdd({
-      fname: "",
-      lname: "",
-      email: "",
-      password: "",
-    });
-    setOpenAddAdminDialog(false);
-  };
-
-  const handleSubmitModifyAdmin = () => {
-    setConfirmModifyDialog(true);
-  };
-
-  const handleSubmitDeleteAdmin = () => {
-    setConfirmDeleteDialog(true);
-  };
-
-  React.useEffect(() => {
-    getAdminData();
-    setAdminModify({
-      fname: adminSelect.fname,
-      lname: adminSelect.lname,
-      email: adminSelect.email,
-      password: adminSelect.password,
-    });
-  }, [adminSelect]);
-
-  function getAdminData() {
-    axios.get(getAdmin_API_URL).then((res) => {
-      // console.log(res.data);
-      setAdminData(res.data.data);
-    });
-  }
-
-  const onhandleSelect = (e) => {
-    setAdminSelect({
-      ...adminSelect,
-      fname: e.fName,
-      lname: e.lName,
-      email: e.Email,
-      password: e.passWord,
-    });
-    handleClickOpenUpDateDelete();
-  };
-
-  function openAlertModSuccess() {
-    setOpenAlertMod(true);
-    setTimeout(() => {
-      setOpenAlertMod(false);
-    }, 2000);
-  }
-
-  function openAlertAddSuccess() {
-    setOpenAlertAdd(true);
-    setTimeout(() => {
-      setOpenAlertAdd(false);
-    }, 2000);
-  }
-
-  function openAleartDelSuccess() {
-    setOpenAleartDel(true);
-    setTimeout(() => {
-      setOpenAleartDel(false);
-    }, 2000);
-  }
-
   return (
     <React.Fragment>
-      {openAlertMod && <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>}
+      {openAlertMod && <Alert severity="info">แก้ไขข้อมูลสำเร็จ</Alert>}
       {openAlertAdd && <Alert severity="success">เพิ่มผู้ดูแลระบบสำเร็จ</Alert>}
-      {openAleartDel && <Alert severity="success">ลบผู้ดูแลระบบสำเร็จ</Alert>}
+      {openAleartDel && <Alert severity="error">ลบผู้ดูแลระบบสำเร็จ</Alert>}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"
@@ -319,7 +358,8 @@ const AdminData = () => {
       </TableContainer>
 
       <Dialog open={openAddAdminDialog} onClose={handleCloseAddAdminDialog}>
-        <Box component="form" onSubmit={handleSubmitAddAdmin}>
+        <Box>
+        <form onSubmit={handleSubmit(handleSubmitAddAdmin)}>
           <DialogContent>
             <DialogTitle>เพิ่มผู้ดูแลระบบ</DialogTitle>
             <Grid
@@ -328,7 +368,7 @@ const AdminData = () => {
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <Grid item xs={6}>
-                <TextField
+                {/* <TextField
                   value={adminAdd.fname}
                   id="fname"
                   label="ชื่อ"
@@ -343,10 +383,19 @@ const AdminData = () => {
                       fname: e.target.value,
                     });
                   }}
-                />
+                /> */}
+                
+                  <CustomInput
+                    name={"fname"}
+                    label={"ชื่อ"}
+                    value={adminAdd.fname}
+                    required={true}
+                    control={control}
+                    id={"fname"}
+                  />
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                {/* <TextField
                   value={adminAdd.lname}
                   id="lname"
                   label="นามสกุล"
@@ -361,10 +410,19 @@ const AdminData = () => {
                       lname: e.target.value,
                     });
                   }}
-                />
+                /> */}
+
+                <CustomInput
+                    name={"lname"}
+                    label={"นามสกุล"}
+                    value={adminAdd.lname}
+                    required={true}
+                    control={control}
+                    id={"lname"}
+                  />      
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                {/* <TextField
                   value={adminAdd.email}
                   id="email"
                   label="อีเมล"
@@ -380,10 +438,19 @@ const AdminData = () => {
                       email: e.target.value,
                     });
                   }}
-                />
+                /> */}
+                <CustomInput
+                    name={"email"}
+                    label={"อีเมล"}
+                    value={adminAdd.email}
+                    required={true}
+                    control={control}
+                    id={"email"}
+                    type={"email"}
+                  />  
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                {/* <TextField
                   value={adminAdd.password}
                   id="password"
                   label="รหัสผ่าน"
@@ -399,7 +466,16 @@ const AdminData = () => {
                       password: e.target.value,
                     });
                   }}
-                />
+                /> */}
+                <CustomInput
+                    name={"password"}
+                    label={"รหัสผ่าน"}
+                    value={adminAdd.password}
+                    required={true}
+                    control={control}
+                    id={"password"}
+                    type={"password"}
+                  />
               </Grid>
             </Grid>
           </DialogContent>
@@ -407,10 +483,12 @@ const AdminData = () => {
             <Button type="submit">ยืนยัน</Button>
             <Button onClick={handleCloseAddAdminDialog}>ยกเลิก</Button>
           </DialogActions>
+          </form>
         </Box>
       </Dialog>
 
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
+      <form onSubmit={handleSubmit(onSubmitModifyResearch)}>
         <DialogContent>
           <DialogTitle>ข้อมูลผู้ดูแลระบบ</DialogTitle>
           <Grid
@@ -419,7 +497,7 @@ const AdminData = () => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={6}>
-              <TextField
+              {/* <TextField
                 id="fname"
                 label="ชื่อ"
                 defaultValue={adminSelect.fname}
@@ -430,10 +508,26 @@ const AdminData = () => {
                     fname: e.target.value,
                   });
                 }}
-              />
+              /> */}
+              <CustomInput
+                    name={"fnameModify"}
+                    label={"ชื่อ"}
+                    value={Adminmodify.fname}
+                    // required={true}
+                    control={control}
+                    id={"fnameModify"}
+                  />
             </Grid>
             <Grid item xs={6}>
-              <TextField
+            <CustomInput
+                    name={"lnameModify"}
+                    label={"นามสกุล"}
+                    value={Adminmodify.lname}
+                    // required={true}
+                    control={control}
+                    id={"lnameModify"}
+                  />
+              {/* <TextField
                 id="lname"
                 label="นามสกุล"
                 defaultValue={adminSelect.lname}
@@ -444,10 +538,10 @@ const AdminData = () => {
                     lname: e.target.value,
                   });
                 }}
-              />
+              /> */}
             </Grid>
             <Grid item xs={6}>
-              <TextField
+              {/* <TextField
                 id="email"
                 label="อีเมล"
                 defaultValue={adminSelect.email}
@@ -458,27 +552,32 @@ const AdminData = () => {
                     email: e.target.value,
                   });
                 }}
-              />
+              /> */}
+              <CustomInput
+                    name={"emailModify"}
+                    label={"อีเมล"}
+                    value={Adminmodify.email}
+                    // required={true}
+                    control={control}
+                    id={"emailModify"}
+                    type={"email"}
+                  />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                id="password"
-                label="รหัสผ่าน"
-                defaultValue={adminSelect.password}
-                variant="filled"
-                type="password"
-                onChange={(e) => {
-                  setAdminModify({
-                    ...Adminmodify,
-                    password: e.target.value,
-                  });
-                }}
-              />
+            <CustomInput
+                    name={"passwordModify"}
+                    label={"รหัสผ่าน"}
+                    value={Adminmodify.password}
+                    // required={true}
+                    control={control}
+                    id={"passwordModify"}
+                    type={"password"}
+                  />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmitModifyAdmin}>แก้ไข</Button>
+          <Button type="submit" >แก้ไข</Button>
           <Button onClick={handleSubmitDeleteAdmin}>ลบผู้ดูแลระบบ</Button>
         </DialogActions>
 
@@ -520,6 +619,7 @@ const AdminData = () => {
             <Button onClick={handleConfirmModify}>ยืนยัน</Button>
           </DialogActions>
         </Dialog>
+        </form>
       </Dialog>
     </React.Fragment>
   );
