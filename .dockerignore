@@ -5,3 +5,5 @@ docker-compose*
 .git
 .gitignore
 .vscode
+.DS_Store
+.env

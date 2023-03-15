@@ -310,9 +310,9 @@ const SucarCaneData = () => {
 
   return (
     <React.Fragment>
-      {openAlertMod && <Alert severity="success">แก้ไขข้อมูลสำเร็จ</Alert>}
+      {openAlertMod && <Alert severity="info">แก้ไขข้อมูลสำเร็จ</Alert>}
       {openAlertAdd && <Alert severity="success">เพิ่มข้อมูลโรคสำเร็จ</Alert>}
-      {openAleartDel && <Alert severity="success">ลบข้อมูลโรคสำเร็จ</Alert>}
+      {openAleartDel && <Alert severity="error">ลบข้อมูลโรคสำเร็จ</Alert>}
       <Grid container width={"100%"} justifyContent={"flex-end"}>
         <Button
           variant="contained"

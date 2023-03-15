@@ -12,7 +12,11 @@ import Slide from "@mui/material/Slide";
 import {
   getSelectResearch_API_URL,
   updataSelectResearch_API_URL,
+  sendEmailResearch_API_URL,
 } from "../API/config/api.config";
+import { useForm, Controller } from "react-hook-form";
+import CustomInput from "../CustomInput/CustomInput";
+import Alert from "@mui/material/Alert";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -20,6 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Profile = () => {
   const Research = localStorage.getItem("User");
+  const [openAlertMod, setOpenAlertMod] = React.useState(false);
   const [research, setresearch] = React.useState([]);
   const [openUpDateDelete, setopenUpDateDeletee] = React.useState(false);
   const [confirmModifyDialog, setConfirmModifyDialog] = React.useState(false);
@@ -42,14 +47,54 @@ const Profile = () => {
     phoneNumber: "",
     Modifydate: "",
   });
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      fnameModify: "",
+      lnameModify: "",
+      emailModify: "",
+      passwordModify: "",
+      phoneNumberModify: "",
+    },
+  });
 
   const handleCloseConfirmModify = () => {
     setConfirmModifyDialog(false);
   };
 
+  const onSubmitModifyResearch = (data) => {
+    console.log(data);
+    // setConfirmModifyDialog(true);
+    setresearchModify({
+      researcherID: research.researcherID,
+      Email: data.emailModify,
+      passWord: data.passwordModify,
+      fName: data.fnameModify,
+      lName: data.lnameModify,
+      phoneNumber: data.phoneNumberModify,
+    });
+    setConfirmModifyDialog(true);
+  };
+
   const handleConfirmModify = () => {
+    // console.log(researchModify);
     let date = new Date();
     let dateNow = date.toLocaleDateString();
+    let researchSelectEmail = researchSelect.Email;
+    let EmailVerify = "Verify";
+    // console.log(researchSelectEmail);
+    // console.log(researchModify.Email);
+    // console.log(researchSelectEmail === researchModify.Email)
+
+    if ((researchSelectEmail !== researchModify.Email) === true) {
+      // console.log("email is truerue");
+      EmailVerify = "notVerify";
+      axios
+        .post(sendEmailResearch_API_URL, { email: researchModify.Email })
+        .then((res) => {
+          //  console.log("🚀 ~ file: AdminData.jsx:179 ~ axios.post ~ res:", res)
+        });
+    }
+
     axios
       .patch(updataSelectResearch_API_URL, {
         researcherID: researchModify.researcherID,
@@ -59,9 +104,11 @@ const Profile = () => {
         lName: researchModify.lName,
         phoneNumber: researchModify.phoneNumber,
         Modifydate: dateNow,
+        EmailVerify: EmailVerify,
       })
       .then((res) => {
         if (res.data.status === "success") {
+          openAlertModSuccess();
           // console.log("update success");
         }
       });
@@ -83,6 +130,7 @@ const Profile = () => {
       phoneNumber: "",
       Modifydate: "",
     });
+    reset();
     setConfirmModifyDialog(false);
     setopenUpDateDeletee(false);
     setConfirmModify(false);
@@ -109,6 +157,13 @@ const Profile = () => {
       phoneNumber: research.phoneNumber,
       Modifydate: research.Modifydate,
     });
+    reset({
+      fnameModify: research.fName,
+      lnameModify: research.lName,
+      emailModify: research.Email,
+      passwordModify: '',
+      phoneNumberModify: research.phoneNumber,
+    });
   };
 
   function getresearch() {
@@ -134,8 +189,16 @@ const Profile = () => {
     });
   }, [researchSelect]);
 
+  function openAlertModSuccess() {
+    setOpenAlertMod(true);
+    setTimeout(() => {
+      setOpenAlertMod(false);
+    }, 2000);
+  }
+
   return (
     <React.Fragment>
+      {openAlertMod && <Alert severity="info">แก้ไขข้อมูลสำเร็จ</Alert>}
       <Grid width={"100%"} justifyContent={"flex-end"}>
         <Box height={500} width={"100%"}>
           <Grid
@@ -271,7 +334,8 @@ const Profile = () => {
       </Grid>
 
       <Dialog open={openUpDateDelete} onClose={handleCloseUpDateDelete}>
-        <Box component="form" onSubmit={handleConfirmModify}>
+        <Box>
+        <form onSubmit={handleSubmit(onSubmitModifyResearch)}>
           <DialogContent>
             <DialogTitle>ข้อมูลนักวิจัย</DialogTitle>
             <Grid
@@ -280,81 +344,62 @@ const Profile = () => {
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <Grid item xs={6}>
-                <TextField
-                  id="fName"
-                  label="ชื่อ"
-                  defaultValue={researchSelect.fName}
-                  variant="filled"
-                  fullWidth
-                  onChange={(e) => {
-                    setresearchModify({
-                      ...researchModify,
-                      fName: e.target.value,
-                    });
-                  }}
-                />
+              
+                <CustomInput
+                    name={"fnameModify"}
+                    label={"ชื่อ"}
+                    value={researchModify.fName}
+                    // required={true}
+                    control={control}
+                    id={"fnameModify"}
+                  />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  id="lName"
-                  label="นามสกุล"
-                  defaultValue={researchSelect.lName}
-                  variant="filled"
-                  fullWidth
-                  onChange={(e) => {
-                    setresearchModify({
-                      ...researchModify,
-                      lName: e.target.value,
-                    });
-                  }}
-                />
+            
+                <CustomInput
+                    name={"lnameModify"}
+                    label={"นามสกุล"}
+                    value={researchModify.lName}
+                    // required={true}
+                    control={control}
+                    id={"lnameModify"}
+                  />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  id="Email"
-                  label="อีเมล"
-                  defaultValue={researchSelect.Email}
-                  variant="filled"
-                  fullWidth
-                  type={"email"}
-                  onChange={(e) => {
-                    setresearchModify({
-                      ...researchModify,
-                      Email: e.target.value,
-                    });
-                  }}
-                />
+             
+                <CustomInput
+                    name={"emailModify"}
+                    label={"อีเมล"}
+                    value={researchModify.Email}
+                    // required={true}
+                    control={control}
+                    id={"emailModify"}
+                    type={"email"}
+                  />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  id="passWord"
-                  label="รหัสผ่าน"
-                  defaultValue={researchSelect.passWord}
-                  variant="filled"
-                  fullWidth
-                  type={"password"}
-                  onChange={(e) => {
-                    setresearchModify({
-                      ...researchModify,
-                      passWord: e.target.value,
-                    });
-                  }}
-                />
+                
+                <CustomInput
+                    name={"passwordModify"}
+                    label={"รหัสผ่าน"}
+                    value={researchModify.passWord}
+                    // required={true}
+                    control={control}
+                    id={"passwordModify"}
+                    type={"password"}
+                  />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  id="phoneNumber"
-                  label="เบอร์โทรศัพท์"
-                  defaultValue={researchSelect.phoneNumber}
-                  variant="filled"
-                  fullWidth
-                  onChange={(e) => {
-                    setresearchModify({
-                      ...researchModify,
-                      phoneNumber: e.target.value,
-                    });
-                  }}
-                />
+                
+                <CustomInput
+                    name={"phoneNumberModify"}
+                    label={"เบอร์โทรศัพท์"}
+                    value={researchModify.phoneNumber}
+                    // required={true}
+                    control={control}
+                    id={"phoneNumberModify"}
+                    inputProps={{ pattern: "[0-9]{10}" }}
+                  />
               </Grid>
               <Grid item xs={6}>
                 <TextField
@@ -369,7 +414,7 @@ const Profile = () => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleSubmitModifyDisease}>แก้ไข</Button>
+            <Button type="submit">แก้ไข</Button>
           </DialogActions>
 
           <Dialog
@@ -391,6 +436,7 @@ const Profile = () => {
               <Button onClick={handleConfirmModify}>ยืนยัน</Button>
             </DialogActions>
           </Dialog>
+        </form>
         </Box>
       </Dialog>
     </React.Fragment>

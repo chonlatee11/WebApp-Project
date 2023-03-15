@@ -497,18 +497,6 @@ const AdminData = () => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={6}>
-              {/* <TextField
-                id="fname"
-                label="ชื่อ"
-                defaultValue={adminSelect.fname}
-                variant="filled"
-                onChange={(e) => {
-                  setAdminModify({
-                    ...Adminmodify,
-                    fname: e.target.value,
-                  });
-                }}
-              /> */}
               <CustomInput
                     name={"fnameModify"}
                     label={"ชื่อ"}
@@ -527,32 +515,8 @@ const AdminData = () => {
                     control={control}
                     id={"lnameModify"}
                   />
-              {/* <TextField
-                id="lname"
-                label="นามสกุล"
-                defaultValue={adminSelect.lname}
-                variant="filled"
-                onChange={(e) => {
-                  setAdminModify({
-                    ...Adminmodify,
-                    lname: e.target.value,
-                  });
-                }}
-              /> */}
             </Grid>
             <Grid item xs={6}>
-              {/* <TextField
-                id="email"
-                label="อีเมล"
-                defaultValue={adminSelect.email}
-                variant="filled"
-                onChange={(e) => {
-                  setAdminModify({
-                    ...Adminmodify,
-                    email: e.target.value,
-                  });
-                }}
-              /> */}
               <CustomInput
                     name={"emailModify"}
                     label={"อีเมล"}
