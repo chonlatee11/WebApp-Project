@@ -10,14 +10,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { getSelectDesease_API_URL } from "../API/config/api.config";
+import { getSelectDesease_API_URL, ip } from "../API/config/api.config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -206,90 +206,86 @@ const SearchDisease = () => {
         </Table>
       </TableContainer>
       <Dialog open={openDialog} onClose={setCloseDialog}>
-        <DialogContent>
-          <DialogTitle>ข้อมูลเกษตรกร</DialogTitle>
+      <DialogContent>
+      <Grid container
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}>
+        <Grid>
+        <Typography variant="h5">ข้อมูลการรายงานโรค</Typography>
+          </Grid>
+          </Grid>
           <Grid
             container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}
           >
-            <Grid item xs={6}>
-              <TextField
-                id="UserFname"
-                label="ชื่อ"
-                defaultValue={diseaseDataSelect.UserFname}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              ชื่อ
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.UserFname}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="UserLname"
-                label="นามสกุล"
-                defaultValue={diseaseDataSelect.UserLname}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2, mb:1}}>
+              <Typography color={"black"} variant={'caption'}>
+              นามสกุล
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.UserLname}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="PhoneNumber"
-                label="หมายเลขโทรศัพท์"
-                defaultValue={diseaseDataSelect.PhoneNumber}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              หมายเลขโทรศัพท์
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.PhoneNumber}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DiseaseName"
-                label="โรคที่รายงาน"
-                defaultValue={diseaseDataSelect.DiseaseName}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              โรคที่รายงาน
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.DiseaseName}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="ResaultPredict"
-                label="ผลการวิเคราะห์โรค"
-                defaultValue={diseaseDataSelect.ResaultPredict}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2, mb: 1, mr: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              ผลการวิเคราะห์โรค
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.ResaultPredict}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DateReport"
-                label="วันที่รายงาน"
-                defaultValue={diseaseDataSelect.DateReport}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              วันที่รายงาน
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.DateReport}
+              </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                multiline
-                rows={2}
-                id="AddressUser"
-                label="ที่อยู่"
-                defaultValue={diseaseDataSelect.AddressUser}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={10} sx={{border: "1px solid", borderRadius: 2, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              ที่อยู่
+              </Typography>
+              <Typography color={"black"}>
+              {diseaseDataSelect.AddressUser}
+              </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid minWidth={455}>
               <img
-                src={diseaseDataSelect.ImageUrl}
+                src={`${ip}${diseaseDataSelect.ImageUrl}`}
                 loading="lazy"
-                style={{ width: "550px", height: "300px" }}
+                style={{ width: "100%", height: "300px" }}
               />
             </Grid>
           </Grid>

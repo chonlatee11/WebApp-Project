@@ -24,6 +24,7 @@ import {
   updateDisease_API_URL,
   deleteDisease_API_URL,
   historyDiseaseModify_API_URL,
+  ip,
 } from "../API/config/api.config";
 import { useForm, Controller } from "react-hook-form";
 import CustomInput from "../CustomInput/CustomInput";
@@ -366,7 +367,7 @@ const SucarCaneData = () => {
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <img
-                    src={sucarCaneData.ImageUrl}
+                    src={`${ip}${sucarCaneData.ImageUrl}`}
                     loading="lazy"
                     style={{ width: "150px", height: "150px" }}
                   />

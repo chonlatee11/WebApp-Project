@@ -9,12 +9,11 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import { getHistoryDiseaseModify_API_URL } from "../API/config/api.config";
+import { getHistoryDiseaseModify_API_URL, ip } from "../API/config/api.config";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -168,69 +167,77 @@ const HistoryData = () => {
       </TableContainer>
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
         <DialogContent>
-          <DialogTitle>ข้อมูลโรค</DialogTitle>
+        <Grid container
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}>
+        <Grid>
+        <Typography variant="h5">ข้อมูลโรค</Typography>
+          </Grid>
+          </Grid>
+          
           <Grid
             container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}
           >
-            <Grid item xs={6}>
-              <TextField
-                value={hitorySelect.InfoUpdate}
-                id="InfoDiseaseData"
-                label="ข้อมูลโรคอ้อย"
-                variant="filled"
-                multiline
-                rows={5}
-                fullWidth
-                disabled
+            <Grid item xs={10} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            ข้อมูลโรคอ้อย
+              </Typography>
+              <Typography color={"black"}>
+              {hitorySelect.InfoUpdate}
+              </Typography>
+            </Grid>
+              <Grid item xs={10} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+              <Typography color={"black"} variant={'caption'} >
+              ข้อมูลการป้องกันโรคในอ้อย
+              </Typography>
+              <Typography color={"black"} align={'left'}>
+              {hitorySelect.ProtectUpdate}
+              </Typography>
+            </Grid>
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              ชิ่อของโรคอ้อย
+              </Typography>
+              <Typography color={"black"}>
+              {hitorySelect.NameUpdate}
+              </Typography>
+            </Grid>
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+              <Typography color={"black"} variant={'caption'}>
+              ชิ่อภาษาอังกฤษ
+              </Typography>
+              <Typography color={"black"}>
+              {hitorySelect.NameEngUpdate}
+              </Typography>
+            </Grid>
+            <Grid minWidth={455}>
+              <img
+                src={`${ip}${hitorySelect.ImageNameUpdate}`}
+                loading="lazy"
+                style={{ width: "100%", height: "300px" }}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={hitorySelect.ProtectUpdate}
-                id="ProtectInfoData"
-                label="ข้อมูลการป้องกันโรคในอ้อย"
-                variant="filled"
-                multiline
-                rows={5}
-                fullWidth
-                disabled
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={hitorySelect.NameUpdate}
-                id="DiseaseNameData"
-                label="ชิ่อของโรคอ้อย"
-                variant="filled"
-                fullWidth
-                disabled
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={hitorySelect.NameEngUpdate}
-                id="DiseaseNameEngData"
-                label="ชิ่อภาษาอังกฤษ"
-                variant="filled"
-                fullWidth
-                disabled
-              />
-            </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               {hitorySelect.ImageNameUpdate === "null" ? (
                 <></>
               ) : (
                 <>
                   <img
-                    src={hitorySelect.ImageNameUpdate}
+                    src={`${ip}${hitorySelect.ImageNameUpdate}`}
                     loading="lazy"
                     style={{ width: "550px", height: "300px" }}
                   />
                 </>
               )}
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
       </Dialog>

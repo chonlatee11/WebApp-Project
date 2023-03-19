@@ -44,3 +44,6 @@ export const keygooglemap = "AIzaSyAm5Ee4TqV8Vr6MxtTmuRZKrXPAPQCiRuU";
 // Authen
 export const loginAdmin_API_URL = "http://141.98.17.47:3000/loginADMIN";
 export const loginResearch_API_URL = "http://141.98.17.47:3000/ResearcherLogin";
+
+// ip
+export const ip = "http://141.98.17.47:3002/image/";

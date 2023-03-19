@@ -9,13 +9,13 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { diseaseReport_API_URL } from "../API/config/api.config";
+import { diseaseReport_API_URL, ip } from "../API/config/api.config";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -176,58 +176,77 @@ const DiseaseReport = () => {
       </TableContainer>
       <Dialog open={openUpDateDelet} onClose={handleCloseUpDateDelete}>
         <DialogContent>
-          <DialogTitle>ข้อมูลโรคการรายงานโรค</DialogTitle>
           <Grid
             container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}
           >
-            <Grid item xs={6}>
-              <TextField
-                id="DiseaseName"
-                label="ชื่อโรคที่รายงาน"
-                defaultValue={reportDataSelect.DiseaseName}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid>
+              <Typography variant="h5">ข้อมูลการรายงานโรค</Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="ResaultPredict"
-                label="ผลการจำแนกโรค"
-                defaultValue={reportDataSelect.ResaultPredict}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+          </Grid>
+          <Grid
+            container
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}
+          >
+            <Grid
+              item
+              xs={5}
+              sx={{ border: "1px solid", borderRadius: 2, mr: 1, mb: 1 }}
+            >
+              <Typography color={"black"} variant={"caption"}>
+                ชื่อโรคที่รายงาน
+              </Typography>
+              <Typography color={"black"}>
+                {reportDataSelect.DiseaseName}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DateReport"
-                label="วันที่รายงาน"
-                defaultValue={reportDataSelect.DateReport}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid
+              item
+              xs={5}
+              sx={{ border: "1px solid", borderRadius: 2, mb: 1 }}
+            >
+              <Typography color={"black"} variant={"caption"}>
+                ผลการจำแนกโรค
+              </Typography>
+              <Typography color={"black"}>
+                {reportDataSelect.ResaultPredict}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={reportDataSelect.Detail}
-                id="Detail"
-                label="ข้อมูลเพิ่มเติม"
-                defaultValue={reportDataSelect.Detail}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid
+              item
+              xs={5}
+              sx={{ border: "1px solid", borderRadius: 2, mr: 1, mb: 1 }}
+            >
+              <Typography color={"black"} variant={"caption"}>
+                วันที่รายงาน
+              </Typography>
+              <Typography color={"black"}>
+                {reportDataSelect.DateReport}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid
+              item
+              xs={5}
+              sx={{ border: "1px solid", borderRadius: 2, mb: 1 }}
+            >
+              <Typography color={"black"} variant={"caption"}>
+                รายละเอียดเพิ่มเติม
+              </Typography>
+              <Typography color={"black"}>{reportDataSelect.Detail}</Typography>
+            </Grid>
+            <Grid minWidth={455}>
               <img
-                src={reportDataSelect.ImageUrl}
+                src={`${ip}${reportDataSelect.ImageUrl}`}
                 loading="lazy"
-                style={{ width: "550px", height: "300px" }}
+                style={{ width: "100%", height: "300px" }}
               />
             </Grid>
           </Grid>

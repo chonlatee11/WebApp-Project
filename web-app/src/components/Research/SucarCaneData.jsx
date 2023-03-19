@@ -1,7 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 import GoogleMapReact from "google-map-react";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import CoronavirusIcon from "@mui/icons-material/Coronavirus";
 import IconButton from "@mui/material/IconButton";
 import Select from "@mui/material/Select";
@@ -269,72 +269,72 @@ const SucarCaneData = () => {
       </Box>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogContent>
-          <DialogTitle>ข้อมูลโรค</DialogTitle>
+        <DialogContent sx={{minWidth: 500}}>
+          <Grid container
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}>
+        <Grid>
+        <Typography variant="h5">ข้อมูลโรค</Typography>
+          </Grid>
+          </Grid>
           <Grid
             container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            justifyContent={"center"}
+            // rowSpacing={1}
+            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            sx={{ p: 1 }}
+            spacing={1}
           >
-            <Grid item xs={6}>
-              <TextField
-                id="DiseaseName"
-                label="ชื่อโรค"
-                defaultValue={selectedReport.DiseaseName}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+              ชื่อโรค
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.DiseaseName}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="ResaultPredict"
-                label="ผลการวินิจฉัย"
-                defaultValue={selectedReport.ResaultPredict}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            ผลการวินิจฉัย
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.ResaultPredict}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="UserFname"
-                label="ชื่อผู้รายงาน"
-                defaultValue={selectedReport.UserFname}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            ชื่อผู้รายงาน
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.UserFname}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="UserLname"
-                label="นามสกุลผู้รายงาน"
-                defaultValue={selectedReport.UserLname}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            นามสกุลผู้รายงาน
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.UserLname}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="phoneNumber"
-                label="เบอร์โทรศัพท์"
-                defaultValue={selectedReport.PhoneNumber}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            หมายเลขโทรศัพท์
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.PhoneNumber}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="DateReport"
-                label="วันที่รายงาน"
-                defaultValue={selectedReport.DateReport}
-                variant="filled"
-                fullWidth
-                disabled
-              />
+            <Grid item xs={5} sx={{border: "1px solid", borderRadius: 2,mr: 1, mb: 1}}>
+            <Typography color={"black"} variant={'caption'}>
+            วันที่รายงาน
+              </Typography>
+              <Typography color={"black"}>
+              {selectedReport.DateReport}
+              </Typography>
             </Grid>
           </Grid>
         </DialogContent>
