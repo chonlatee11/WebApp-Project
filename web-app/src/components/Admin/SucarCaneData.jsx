@@ -367,7 +367,7 @@ const SucarCaneData = () => {
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <img
-                    src={`${ip}${sucarCaneData.ImageUrl}`}
+                    src={`${sucarCaneData.ImageUrl}`}
                     loading="lazy"
                     style={{ width: "150px", height: "150px" }}
                   />

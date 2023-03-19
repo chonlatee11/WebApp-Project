@@ -244,7 +244,7 @@ const DiseaseReport = () => {
             </Grid>
             <Grid minWidth={455}>
               <img
-                src={`${ip}${reportDataSelect.ImageUrl}`}
+                src={`${reportDataSelect.ImageUrl}`}
                 loading="lazy"
                 style={{ width: "100%", height: "300px" }}
               />

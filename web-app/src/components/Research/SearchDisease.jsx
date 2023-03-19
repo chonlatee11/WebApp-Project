@@ -283,7 +283,7 @@ const SearchDisease = () => {
             </Grid>
             <Grid minWidth={455}>
               <img
-                src={`${ip}${diseaseDataSelect.ImageUrl}`}
+                src={`${diseaseDataSelect.ImageUrl}`}
                 loading="lazy"
                 style={{ width: "100%", height: "300px" }}
               />
