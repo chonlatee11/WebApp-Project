@@ -327,14 +327,12 @@ const AdminData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminData
-              .filter((adminData) => {
+            {
+              adminData.filter((adminData) => {
                 return (
-                  adminData.Email !== JSON.parse(adminLogin).email &&
                   adminData.Email !== "admin"
                 );
-              })
-              .map((adminData, index) => (
+              }).map((adminData, index) => (
                 <StyledTableRow
                   key={adminData.adminID}
                   onClick={() => onhandleSelect(adminData)}
@@ -542,7 +540,14 @@ const AdminData = () => {
         </DialogContent>
         <DialogActions>
           <Button type="submit" >แก้ไข</Button>
-          <Button onClick={handleSubmitDeleteAdmin}>ลบผู้ดูแลระบบ</Button>
+          {
+            adminSelect.email !== JSON.parse(adminLogin).email && adminSelect.email !== "admin" ? (
+              <Button onClick={handleSubmitDeleteAdmin}>ลบผู้ดูแลระบบ</Button>
+            ) : (
+                 <></>
+              )
+          }
+          
         </DialogActions>
 
         <Dialog
