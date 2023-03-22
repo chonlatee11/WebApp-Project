@@ -238,9 +238,9 @@ const DiseaseReport = () => {
               sx={{ border: "1px solid", borderRadius: 2, mb: 1 }}
             >
               <Typography color={"black"} variant={"caption"}>
-                รายละเอียดเพิ่มเติม
+                ที่อยู่
               </Typography>
-              <Typography color={"black"}>{reportDataSelect.Detail}</Typography>
+              <Typography color={"black"}>{reportDataSelect.AddressUser}</Typography>
             </Grid>
             <Grid minWidth={455}>
               <img
