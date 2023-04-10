@@ -220,7 +220,7 @@ const HistoryData = () => {
             </Grid>
             <Grid minWidth={455}>
               <img
-                src={`${ip}${hitorySelect.ImageNameUpdate}`}
+                src={`${hitorySelect.ImageNameUpdate}`}
                 loading="lazy"
                 style={{ width: "100%", height: "300px" }}
               />
